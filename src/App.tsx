@@ -4,22 +4,6 @@ import './App.css';
 import HomePage from './components/HomePage';
 import DogPage from './components/DogPage';
 
-function PageB() {
-  return (
-    <div>
-      {' '}
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">To Home</Link>
-          </li>
-        </ul>
-      </nav>
-      <h1> SECOND Page B </h1>
-
-    </div>
-  );
-}
 function App() {
   const camelCase = 5;
   return (
