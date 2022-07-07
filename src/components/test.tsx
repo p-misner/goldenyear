@@ -72,55 +72,95 @@ const TitleBlock = styled.div`
 const ResizingSvg = styled.svg`
   z-index: 1;
 `;
-
-const MonthDays = [
+const TitleSVGText = styled.text`
+  font-family: 'Cormorant', serif;
+  font-size: 24px;
+  font-weight: 700;
+`;
+const MonthSVGText = styled.text`
+  font-family: 'Cormorant', serif;
+  font-size: 16px;
+`;
+const years = ['2012'];
+type MonthDaysProp = {
+  month: string;
+  days: number;
+  startDate: string;
+  endDate: string;
+};
+type MonthDaysArray = MonthDaysProp[];
+const MonthDays: MonthDaysArray = [
   {
     month: 'Jan',
-    days: 31
+    days: 31,
+    startDate: '1/1/2012',
+    endDate: '1/31/2012'
   },
   {
     month: 'Feb',
-    days: 28
+    days: 29,
+    startDate: '2/1/2012',
+    endDate: '2/29/2012'
   },
   {
     month: 'Mar',
-    days: 31
+    days: 31,
+    startDate: '3/1/2012',
+    endDate: '3/31/2012'
   },
   {
     month: 'Apr',
-    days: 30
+    days: 30,
+    startDate: '4/1/2012',
+    endDate: '4/30/2012'
   },
   {
     month: 'May',
-    days: 31
+    days: 31,
+    startDate: '5/1/2012',
+    endDate: '5/31/2012'
   },
   {
     month: 'Jun',
-    days: 30
+    days: 30,
+    startDate: '6/1/2012',
+    endDate: '6/30/2012'
   },
   {
     month: 'Jul',
-    days: 31
+    days: 31,
+    startDate: '7/1/2012',
+    endDate: '7/31/2012'
   },
   {
     month: 'Aug',
-    days: 31
+    days: 31,
+    startDate: '8/1/2012',
+    endDate: '8/31/2012'
   },
   {
     month: 'Sep',
-    days: 30
+    days: 30,
+    startDate: '9/1/2012',
+    endDate: '9/30/2012'
   },
   {
     month: 'Oct',
-    days: 31
+    days: 31,
+    startDate: '10/1/2012',
+    endDate: '10/31/2012'
   },
   {
     month: 'Nov',
-    days: 30
+    days: 30,
+    startDate: '11/1/2012',
+    endDate: '11/30/2012'
   },
   {
     month: 'Dec',
-    days: 31
+    days: 31,
+    startDate: '12/1/2012',
+    endDate: '12/31/2012'
   }
 ];
 
@@ -165,6 +205,17 @@ type DatePathProps = {
   rowHeight: number;
   startOffset: number;
   dogName: string;
+};
+
+type MonthRectProps = {
+  startDateAsNum: number;
+  endDateAsNum: number;
+  screenWidth: number;
+  rowHeight: number;
+  startOffset: number;
+  pixelPerDay: number;
+  month: string;
+  index: number;
 };
 
 function OneWeek({ pixelPerDay, date }: OneWeekProps) {
@@ -298,8 +349,101 @@ function datePath({
     </g>
   );
 }
+function monthRect({
+  startDateAsNum,
+  endDateAsNum,
+  screenWidth,
+  rowHeight,
+  startOffset,
+  pixelPerDay,
+  month,
+  index
+}: MonthRectProps) {
+  const startDateRow = returnYPos({
+    dateAsNum: startDateAsNum,
+    screenWidth,
+    rowHeight
+  });
+  const endDateRow = returnYPos({
+    dateAsNum: endDateAsNum,
+    screenWidth,
+    rowHeight
+  });
+  const startX = returnXPos({
+    dateAsNum: startDateAsNum,
+    screenWidth
+  });
+  const endX = returnXPos({
+    dateAsNum: endDateAsNum,
+    screenWidth
+  });
+  const numLines = new Array((endDateRow - startDateRow) / rowHeight + 1).fill(
+    0
+  );
 
-function HomePage({ isLoading, records }: HomePageProps) {
+  if (numLines.length === 1) {
+    return (
+      <g>
+        <rect
+          x={startX}
+          y={startDateRow + startOffset - rowHeight / 2}
+          height={rowHeight}
+          width={endX - startX + pixelPerDay}
+          style={{
+            stroke: '#D9D9D9',
+            strokeWidth: '1px',
+            strokeDasharray: '4 4',
+            fill: 'none'
+          }}
+        />
+        <MonthSVGText
+          x={startX + 5}
+          y={startDateRow + startOffset - rowHeight / 2 + 15}
+          fill="#BDBDBD"
+        >
+          {month}
+        </MonthSVGText>
+      </g>
+    );
+  }
+  return (
+    <g>
+      <rect
+        x={startX}
+        y={startDateRow + startOffset - rowHeight / 2}
+        height={rowHeight}
+        width={screenWidth - startX + pixelPerDay}
+        style={{
+          stroke: '#D9D9D9',
+          strokeWidth: '1px',
+          strokeDasharray: '4 4',
+          fill: 'none'
+        }}
+      />
+      <MonthSVGText
+        x={startX + 5}
+        y={startDateRow + startOffset - rowHeight / 2 + 15}
+        fill="#BDBDBD"
+      >
+        {month}
+      </MonthSVGText>
+      <rect
+        x={0}
+        y={endDateRow + startOffset - rowHeight / 2}
+        height={rowHeight}
+        width={endX + pixelPerDay}
+        style={{
+          stroke: '#D9D9D9',
+          strokeWidth: '1px',
+          strokeDasharray: '4 4',
+          fill: 'none'
+        }}
+      />
+    </g>
+  );
+}
+
+function Test({ isLoading, records }: HomePageProps) {
   const rowHeight = 60;
   const pixelPerDay = 8;
   const startOffset = 100;
@@ -333,7 +477,7 @@ function HomePage({ isLoading, records }: HomePageProps) {
     <Background>
       <Content ref={widthRef}>
         <Blocks>
-          <TitleBlock> The Golden Years</TitleBlock>
+          <TitleBlock> Testing</TitleBlock>
           <VerticalBlocks>
             <SubtitleBlock>
               The golden retrievers we have loved and
@@ -377,6 +521,38 @@ function HomePage({ isLoading, records }: HomePageProps) {
               </linearGradient>
             </defs>
 
+            {MonthDays.map(
+              (x: MonthDaysProp, i: number) =>
+                // eslint-disable-next-line implicit-arrow-linebreak
+                monthRect({
+                  startDateAsNum: OneWeek({
+                    pixelPerDay,
+                    date: new Date(x.startDate)
+                  }),
+                  endDateAsNum: OneWeek({
+                    pixelPerDay,
+                    date: new Date(x.endDate)
+                  }),
+                  screenWidth: width.width,
+                  rowHeight,
+                  startOffset,
+                  pixelPerDay,
+                  month: x.month,
+                  index: i
+                })
+              // eslint-disable-next-line function-paren-newline
+            )}
+            <line
+              x1="0"
+              y1={startOffset}
+              x2={width.width}
+              y2={startOffset}
+              stroke="#E0E0E0"
+              strokeWidth="2"
+            />
+            <TitleSVGText x={20} y={startOffset - 20} fill="#BDBDBD">
+              2012- Beginning of It All
+            </TitleSVGText>
             {records.map(
               (x: RecordsProp) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
@@ -404,4 +580,4 @@ function HomePage({ isLoading, records }: HomePageProps) {
   );
 }
 
-export default HomePage;
+export default Test;
