@@ -75,7 +75,7 @@ const ResizingSvg = styled.svg`
 `;
 const TitleSVGText = styled.text`
   font-family: 'Cormorant', serif;
-  font-size: 24px;
+  font-size: 48px;
   font-weight: 700;
 `;
 const MonthSVGText = styled.text`
@@ -371,13 +371,14 @@ type DayPosProps = {
 type XPosProps = {
   dateAsNum: number;
   screenWidth: number;
+  year: number;
 };
 type YPosProps = {
   dateAsNum: number;
   screenWidth: number;
   rowHeight: number;
 };
-type YOffsetProps = {
+type XOffsetProps = {
   screenWidth: number;
   rowHeight: number;
   year: number;
@@ -405,6 +406,9 @@ type DatePathProps = {
   rowHeight: number;
   startOffset: number;
   dogName: string;
+  yearStart: number;
+  yearEnd: number;
+  pixelPerDay: number;
 };
 
 type MonthRectProps = {
@@ -418,13 +422,17 @@ type MonthRectProps = {
   year: number;
 };
 
+const monthDashGray = '#e4e4e4';
+const lineBorderGray = '#E0E0E0';
+const monthTextGray = '#E0E0E0';
+
 function OneWeek({ pixelPerDay, date }: OneWeekProps) {
   const oneDayScale = scaleTime()
     .domain([new Date(2012, 0, 1), new Date(2012, 0, 2)]) // first dog Date, first Dog Date + 1 day
     .range([0, pixelPerDay]);
   return oneDayScale(date);
 }
-function returnXPos({ dateAsNum, screenWidth }: XPosProps) {
+function returnXPos({ dateAsNum, screenWidth, year }: XPosProps) {
   return dateAsNum % screenWidth;
 }
 function returnYPos({ dateAsNum, screenWidth, rowHeight }: YPosProps) {
@@ -437,24 +445,7 @@ function DayPos({ pixelPerDay, date, screenWidth }: DayPosProps) {
   // year overflow add on ONLY in X
   // screenwidth
 
-  return oneDayScale(new Date(2012, date.getUTCMonth(), date.getDate()));
-}
-
-// there might be a small offset equal to rowHeight/2 for each year
-function yOffset({ year, screenWidth, rowHeight, pixelPerDay }: YOffsetProps) {
-  const oneYearHeight =
-    returnYPos({
-      dateAsNum: DayPos({
-        pixelPerDay,
-        date: new Date(year, 11, 31),
-        screenWidth
-      }),
-      screenWidth,
-      rowHeight
-    }) *
-    (year - 2012);
-
-  return oneYearHeight;
+  return oneDayScale(date);
 }
 
 function pathReturn({
@@ -521,25 +512,30 @@ function datePath({
   screenWidth,
   rowHeight,
   startOffset,
-  dogName
+  dogName,
+  yearStart,
+  yearEnd,
+  pixelPerDay
 }: DatePathProps) {
   const startDateRow = returnYPos({
-    dateAsNum: startDateAsNum,
+    dateAsNum: startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
     screenWidth,
     rowHeight
   });
   const endDateRow = returnYPos({
-    dateAsNum: endDateAsNum,
+    dateAsNum: endDateAsNum + 30 * (yearEnd - 2011) * pixelPerDay,
     screenWidth,
     rowHeight
   });
   const startX = returnXPos({
-    dateAsNum: startDateAsNum,
-    screenWidth
+    dateAsNum: startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
+    screenWidth,
+    year: yearStart
   });
   const endX = returnXPos({
-    dateAsNum: endDateAsNum,
-    screenWidth
+    dateAsNum: endDateAsNum + 30 * (yearEnd - 2011) * pixelPerDay,
+    screenWidth,
+    year: yearEnd
   });
 
   const numLines = new Array((endDateRow - startDateRow) / rowHeight + 1).fill(
@@ -589,10 +585,7 @@ function monthRect({
   month,
   year
 }: MonthRectProps) {
-  const totalOffset =
-    startOffset +
-    yOffset({ year, screenWidth, rowHeight, pixelPerDay }) +
-    (year - 2012) * (rowHeight / 2 + 50);
+  const totalOffset = startOffset;
   const startDateRow = returnYPos({
     dateAsNum: startDateAsNum,
     screenWidth,
@@ -605,11 +598,13 @@ function monthRect({
   });
   const startX = returnXPos({
     dateAsNum: startDateAsNum,
-    screenWidth
+    screenWidth,
+    year
   });
   const endX = returnXPos({
     dateAsNum: endDateAsNum,
-    screenWidth
+    screenWidth,
+    year
   });
   const numLines = new Array((endDateRow - startDateRow) / rowHeight + 1).fill(
     0
@@ -624,7 +619,7 @@ function monthRect({
           height={rowHeight}
           width={endX - startX + pixelPerDay}
           style={{
-            stroke: '#BDBDBD',
+            stroke: monthDashGray,
             strokeWidth: '1px',
             strokeDasharray: '4 4',
             fill: 'white'
@@ -633,26 +628,18 @@ function monthRect({
         <MonthSVGText
           x={startX + 5}
           y={startDateRow + totalOffset - rowHeight / 2 + 15}
-          fill="#BDBDBD"
+          fill={monthTextGray}
         >
           {month}
         </MonthSVGText>
-        {month === 'Dec' && (
-          <rect
-            x={endX + pixelPerDay + 1}
-            y={startDateRow + totalOffset - rowHeight / 2}
-            height={rowHeight}
-            width={screenWidth - endX}
-            fill="#F2F2F2"
-          />
-        )}
+
         {month === 'Dec' && (
           <line
             x1="0"
             x2={screenWidth}
             y1={endDateRow + totalOffset + rowHeight / 2}
             y2={endDateRow + totalOffset + rowHeight / 2}
-            stroke="#BDBDBD"
+            stroke={lineBorderGray}
             strokeWidth="2"
           />
         )}
@@ -667,7 +654,7 @@ function monthRect({
         height={rowHeight}
         width={screenWidth - startX + pixelPerDay}
         style={{
-          stroke: '#BDBDBD',
+          stroke: monthDashGray,
           strokeWidth: '1px',
           strokeDasharray: '4 4',
           fill: 'white'
@@ -676,7 +663,7 @@ function monthRect({
       <MonthSVGText
         x={startX + 5}
         y={startDateRow + totalOffset - rowHeight / 2 + 15}
-        fill="#BDBDBD"
+        fill={monthTextGray}
       >
         {month}
       </MonthSVGText>
@@ -686,28 +673,20 @@ function monthRect({
         height={rowHeight}
         width={endX + pixelPerDay}
         style={{
-          stroke: '#BDBDBD',
+          stroke: monthDashGray,
           strokeWidth: '1px',
           strokeDasharray: '4 4',
           fill: 'white'
         }}
       />
-      {month === 'Dec' && (
-        <rect
-          x={endX + pixelPerDay + 1}
-          y={endDateRow + totalOffset - rowHeight / 2}
-          height={rowHeight}
-          width={screenWidth - endX}
-          fill="#F2F2F2"
-        />
-      )}
+
       {month === 'Dec' && (
         <line
           x1="0"
           x2={screenWidth}
           y1={endDateRow + totalOffset + rowHeight / 2}
           y2={endDateRow + totalOffset + rowHeight / 2}
-          stroke="#BDBDBD"
+          stroke={lineBorderGray}
           strokeWidth="2"
         />
       )}
@@ -716,14 +695,14 @@ function monthRect({
         x2={screenWidth}
         y1={totalOffset}
         y2={totalOffset}
-        stroke="#E0E0E0"
+        stroke={lineBorderGray}
         strokeWidth="2"
       />
     </g>
   );
 }
 
-function Test({ isLoading, records }: HomePageProps) {
+function TestTwo({ isLoading, records }: HomePageProps) {
   const rowHeight = 60;
   const pixelPerDay = 8;
   const startOffset = 100;
@@ -733,22 +712,6 @@ function Test({ isLoading, records }: HomePageProps) {
     pixelPerDay,
     date: new Date(2022, 0, 2)
   });
-
-  // console.log(
-  //     yOffset({ year: 2015, screenWidth: width.width, pixelPerDay, rowHeight })
-  //   );
-
-  //   console.log(
-  //     returnYPos({
-  //       dateAsNum: OneWeek({
-  //         pixelPerDay,
-  //         date: new Date(2015, 0, 1)
-  //       }),
-  //       screenWidth: width.width,
-  //       rowHeight
-  //     })
-  //   );
-  // function that updates width
 
   const updateWidth = () => {
     const newWidth = widthRef.current.clientWidth;
@@ -823,16 +786,20 @@ function Test({ isLoading, records }: HomePageProps) {
                   (x: MonthDaysProp, i: number) =>
                     // eslint-disable-next-line implicit-arrow-linebreak
                     monthRect({
-                      startDateAsNum: DayPos({
-                        pixelPerDay,
-                        date: new Date(`${x.startDate}${yr}`),
-                        screenWidth: width.width
-                      }),
-                      endDateAsNum: DayPos({
-                        pixelPerDay,
-                        date: new Date(`${x.endDate}${yr}`),
-                        screenWidth: width.width
-                      }),
+                      startDateAsNum:
+                        DayPos({
+                          pixelPerDay,
+                          date: new Date(`${x.startDate}${yr}`),
+                          screenWidth: width.width
+                        }) +
+                        (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
+                      endDateAsNum:
+                        DayPos({
+                          pixelPerDay,
+                          date: new Date(`${x.endDate}${yr}`),
+                          screenWidth: width.width
+                        }) +
+                        (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
                       screenWidth: width.width,
                       rowHeight,
                       startOffset,
@@ -844,28 +811,6 @@ function Test({ isLoading, records }: HomePageProps) {
                 )
               // eslint-disable-next-line function-paren-newline
             )}
-
-            {years.map((yr: string) => (
-              <TitleSVGText
-                key={yr}
-                x={20}
-                y={
-                  startOffset +
-                  yOffset({
-                    year: parseInt(yr, 10),
-                    screenWidth: width.width,
-                    rowHeight,
-                    pixelPerDay
-                  }) +
-                  (parseInt(yr, 10) - 2012) * (rowHeight / 2 + 50) -
-                  15
-                }
-                fill="#BDBDBD"
-              >
-                {`${parseInt(yr, 10)} - some extra words`}
-              </TitleSVGText>
-            ))}
-
             {records.map(
               (x: RecordsProp) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
@@ -881,11 +826,86 @@ function Test({ isLoading, records }: HomePageProps) {
                   screenWidth: width.width,
                   rowHeight,
                   startOffset,
-                  dogName: x.dogName
+                  dogName: x.dogName,
+                  yearStart: new Date(x.startDate).getFullYear(),
+                  yearEnd: new Date(x.endDate).getFullYear(),
+                  pixelPerDay
                 })
 
               // eslint-disable-next-line function-paren-newline
             )}
+
+            {years.map((yr: string) => (
+              <g key={yr}>
+                <rect
+                  x={returnXPos({
+                    dateAsNum:
+                      DayPos({
+                        pixelPerDay,
+                        date: new Date(`1/1/${yr}`),
+                        screenWidth: width.width
+                      }) +
+                      (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                      0,
+                    screenWidth: width.width,
+                    year: parseInt(yr, 10)
+                  })}
+                  y={
+                    returnYPos({
+                      dateAsNum:
+                        DayPos({
+                          pixelPerDay,
+                          date: new Date(`1/1/${yr}`),
+                          screenWidth: width.width
+                        }) +
+                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                      screenWidth: width.width,
+                      rowHeight
+                    }) +
+                    startOffset -
+                    rowHeight / 2
+                  }
+                  height={rowHeight}
+                  width={30 * pixelPerDay}
+                  //   fill="url(#grad1)"
+                  fill="#f8f8f8"
+                  strokeWidth="2"
+                  stroke="#BDBDBD"
+                  strokeDasharray={`${30 * pixelPerDay} ${rowHeight}`}
+                />
+                <TitleSVGText
+                  x={returnXPos({
+                    dateAsNum:
+                      DayPos({
+                        pixelPerDay,
+                        date: new Date(`1/1/${yr}`),
+                        screenWidth: width.width
+                      }) +
+                      (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                      40,
+                    screenWidth: width.width,
+                    year: parseInt(yr, 10)
+                  })}
+                  y={
+                    returnYPos({
+                      dateAsNum:
+                        DayPos({
+                          pixelPerDay,
+                          date: new Date(`1/1/${yr}`),
+                          screenWidth: width.width
+                        }) +
+                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                        40,
+                      screenWidth: width.width,
+                      rowHeight
+                    }) + startOffset
+                  }
+                  fill="url(#grad1)"
+                >
+                  {yr}
+                </TitleSVGText>
+              </g>
+            ))}
           </ResizingSvg>
         ) : null}
       </Content>
@@ -893,4 +913,4 @@ function Test({ isLoading, records }: HomePageProps) {
   );
 }
 
-export default Test;
+export default TestTwo;
