@@ -1,7 +1,10 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Tooltip from './Tooltip';
+import second from '../data/dogSvgs/ivy.svg';
+import '../stylesheet/fonts.css';
 
 // code inspo links
 // https://codepen.io/creme/pen/gOYrvxM
@@ -12,7 +15,6 @@ interface DogProps {
 
 const Background = styled.div`
   background-color: white;
-
   margin: 0px;
   padding: 0;
   height: 100vh;
@@ -30,61 +32,83 @@ const Content = styled.div`
   );
   width: 96vw;
   max-width: 1180px;
-  margin: 24px auto;
+  overflow: scroll;
+  margin: 44px auto;
   overflow: scroll;
   height: 94vh;
   border: 1px solid black;
+`;
+const SpiralContainer = styled.div`
+  max-width: 1180px;
+  margin: 0 auto;
+  position: absolute;
+  top: 20px;
+  width: 96vw;
+  height: 37px;
+  left: 0;
+  right: 0;
 `;
 const Blocks = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: start;
-  width: 100%;
-  position: sticky;
-  // background-color: white;
-  top: 0px;
-  z-index: 10;
+  padding-top: 24px;
+`;
+const DogImage = styled.img`
+  margin-left: 24px;
+  height: 160px;
 `;
 const VerticalBlocks = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: left;
+  margin-left: 24px;
+  min-width: 330px;
 `;
-const SubtitleBlock = styled.div`
+const TitleItalics = styled.p`
+  font-style: italic;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 50px;
+`;
+const TitleDogName = styled.p`
+  font-weight: 600;
+  font-size: 64px;
+  line-height: 80px;
+`;
+
+const DescripPara = styled.p`
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0 44px;
+`;
+const LeftBlock = styled.div`
   border: 1px solid black;
-  border-top: 0px;
+  border-left: 1px;
+  flex-grow: 1;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  padding: 24px 0px;
+`;
+const RightBlock = styled.div`
+  border: 1px solid black;
   border-left: 0px;
   border-right: 0px;
-  height: 25px;
-  flex-grow: 2;
-  min-width: 300px;
+  flex-grow: 3;
   padding: 4px;
   display: flex;
   align-items: center;
 `;
-const TitleBlock = styled.div`
-  border: 1px solid black;
-  border-top: 0px;
-  border-left: 0px;
-  height: 67px;
-  flex-grow: 2;
-  padding: 0px 8px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  font-size: 24px;
-`;
-
-const HeroContainer = styled.div`
-  width: 70vw;
-  margin: 0 auto;
-`;
 
 const HeroText = styled.h3`
-  font-family: 'Times New Roman', monospace;
-  font-size: 36px;
-  line-height: 80px;
+  font-size: 48px;
+  line-height: 120px;
+  font-weight: 400;
 `;
 const HeroImageInline = styled.img`
   height: 96px;
@@ -93,23 +117,18 @@ const HeroImageInline = styled.img`
   vertical-align: middle;
 `;
 
-const BodyText = styled.p`
-  font-family: Avenir, sans-serif;
-  font-size: 18px;
-  line-height: 22px;
-`;
-
 const ColumnContent = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   margin: 48px;
 `;
 
-const RedDiv = styled.div`
+const TextDiv = styled.div`
   grid-column: 1 / span 6;
 `;
-const BlueDiv = styled.div`
-  grid-column: 1 / span 4;
+
+const Bolded = styled.span`
+  font-weight: 600;
 `;
 
 function DogPage(props: DogProps) {
@@ -118,25 +137,24 @@ function DogPage(props: DogProps) {
     <Background>
       <Content>
         <Blocks>
-          <TitleBlock>{`02. ${dogName}`}</TitleBlock>
-          <VerticalBlocks>
-            <SubtitleBlock>Info A</SubtitleBlock>
-            <SubtitleBlock> Info B</SubtitleBlock>
-          </VerticalBlocks>
-          <VerticalBlocks>
-            <SubtitleBlock>Info C</SubtitleBlock>
-            <SubtitleBlock> Info D</SubtitleBlock>
-          </VerticalBlocks>
+          <LeftBlock>
+            <DogImage src={second} alt="handdrawn" />
+            <VerticalBlocks>
+              <TitleItalics> foster 3</TitleItalics>
+              <TitleDogName>{dogName}</TitleDogName>
+            </VerticalBlocks>
+          </LeftBlock>
+          <RightBlock>
+            <DescripPara>
+              Eight year old Casey first arrived{' '}
+              <Bolded>August 4, 2022.</Bolded> She stayed for 146 days before
+              getting adopted on September 18th. She spent many happy years with
+              her family before passing away in 2016.
+            </DescripPara>
+          </RightBlock>
         </Blocks>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-          </ul>
-        </nav>
         <ColumnContent>
-          <RedDiv>
+          <TextDiv>
             <HeroText>
               Fond of eating dirt
               <Tooltip
@@ -157,19 +175,36 @@ function DogPage(props: DogProps) {
               napping, resting his eyes, and invading the personal space of
               others.
             </HeroText>
-          </RedDiv>
-
-          <BlueDiv>
-            <BodyText>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Commodo
-              non ut quis porttitor. Erat sit imperdiet mi quam. Massa, at lacus
-              vivamus lacus, aliquam habitant nullam. Id maecenas et ultrices
-              lectus eleifend curabitur. Mauris viverra risus, condimentum nunc
-              id. Sed interdum imperdiet malesuada ut arcu nisl orci.
-            </BodyText>
-          </BlueDiv>
+          </TextDiv>
         </ColumnContent>
       </Content>
+      <SpiralContainer>
+        <svg width="100%" height="37px">
+          <pattern
+            id="pattern"
+            x="0"
+            y="0"
+            patternUnits="userSpaceOnUse"
+            width="50"
+            height="37"
+          >
+            <g transform="translate(3,0)">
+              {' '}
+              <path
+                d="M4.49818 23.4467C2.49818 16.6134 -0.701821 2.7467 2.49818 1.9467C6.49818 0.946695 8.5 0.446695 9 1.9467C9.4 3.1467 8.83333 16.78 8.5 23.4467"
+                stroke="#333333"
+                strokeWidth="2"
+                fill="none"
+              />
+            </g>
+
+            <rect fill="#333333" x="2" y="20" width="14" height="14">
+              {' '}
+            </rect>
+          </pattern>
+          <rect x="0" y="0" width="100%" height="37px" fill="url(#pattern)" />
+        </svg>
+      </SpiralContainer>
     </Background>
   );
 }

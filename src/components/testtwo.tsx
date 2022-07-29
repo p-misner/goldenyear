@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { scaleTime } from 'd3-scale';
-import second from '../data/dogSvgs/second.svg';
+import { scaleTime, scaleSequential, scaleLinear } from 'd3-scale';
+import { interpolateTurbo, interpolateYlOrRd } from 'd3-scale-chromatic';
+
+import second from '../data/dogSvgs/ivy.svg';
 
 const Background = styled.div`
   background: rgb(34, 193, 195);
@@ -15,59 +17,28 @@ const Background = styled.div`
     rgba(240, 239, 222, 0.4189814814814815) 71%,
     rgba(253, 187, 45, 0.21064814814814814) 100%
   );
-  margin: 0px;
-  padding: 0;
+  padding: 0px;
   height: 100vh;
-  // overflow: hidden;
+  overflow: hidden;
+`;
+const SpiralContainer = styled.div`
+  max-width: 1180px;
+  margin: 0 auto;
+  position: absolute;
+  top: 20px;
+  width: 96vw;
+  height: 37px;
+  left: 0;
+  right: 0;
 `;
 const Content = styled.div`
   background-color: white;
   width: 96vw;
   max-width: 1180px;
-  margin: 24px auto;
-  // overflow: scroll;
-  // height: 94vh;
+  margin: 44px auto;
+  overflow: scroll;
+  height: 94vh;
   border: 1px solid black;
-`;
-const Blocks = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  width: 100%;
-  position: sticky;
-  background-color: white;
-  top: 0px;
-  z-index: 10;
-`;
-const VerticalBlocks = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-`;
-const SubtitleBlock = styled.div`
-  border: 1px solid black;
-  border-top: 0px;
-  border-left: 0px;
-  border-right: 0px;
-  height: 25px;
-  flex-grow: 2;
-  min-width: 300px;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-`;
-const TitleBlock = styled.div`
-  border: 1px solid black;
-  border-top: 0px;
-  border-left: 0px;
-  height: 67px;
-  flex-grow: 2;
-  padding: 0px 8px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  font-size: 24px;
 `;
 const ResizingSvg = styled.svg`
   z-index: 1;
@@ -95,6 +66,7 @@ const years = [
   '2021',
   '2022'
 ];
+
 type MonthDaysProp = {
   month: string;
   days: number;
@@ -102,182 +74,6 @@ type MonthDaysProp = {
   endDate: string;
 };
 type MonthDaysArray = MonthDaysProp[];
-const MonthDays: MonthDaysArray = [
-  {
-    month: 'Jan',
-    days: 31,
-    startDate: '1/1/2012',
-    endDate: '1/31/2012'
-  },
-  {
-    month: 'Feb',
-    days: 29,
-    startDate: '2/1/2012',
-    endDate: '2/29/2012'
-  },
-  {
-    month: 'Mar',
-    days: 31,
-    startDate: '3/1/2012',
-    endDate: '3/31/2012'
-  },
-  {
-    month: 'Apr',
-    days: 30,
-    startDate: '4/1/2012',
-    endDate: '4/30/2012'
-  },
-  {
-    month: 'May',
-    days: 31,
-    startDate: '5/1/2012',
-    endDate: '5/31/2012'
-  },
-  {
-    month: 'Jun',
-    days: 30,
-    startDate: '6/1/2012',
-    endDate: '6/30/2012'
-  },
-  {
-    month: 'Jul',
-    days: 31,
-    startDate: '7/1/2012',
-    endDate: '7/31/2012'
-  },
-  {
-    month: 'Aug',
-    days: 31,
-    startDate: '8/1/2012',
-    endDate: '8/31/2012'
-  },
-  {
-    month: 'Sep',
-    days: 30,
-    startDate: '9/1/2012',
-    endDate: '9/30/2012'
-  },
-  {
-    month: 'Oct',
-    days: 31,
-    startDate: '10/1/2012',
-    endDate: '10/31/2012'
-  },
-  {
-    month: 'Nov',
-    days: 30,
-    startDate: '11/1/2012',
-    endDate: '11/30/2012'
-  },
-  {
-    month: 'Dec',
-    days: 31,
-    startDate: '12/1/2012',
-    endDate: '12/31/2012'
-  },
-  {
-    month: 'Jan',
-    days: 31,
-    startDate: '1/1/2013',
-    endDate: '1/31/2013'
-  },
-  {
-    month: 'Feb',
-    days: 29,
-    startDate: '2/1/2013',
-    endDate: '2/29/2013'
-  },
-  {
-    month: 'Mar',
-    days: 31,
-    startDate: '3/1/2013',
-    endDate: '3/31/2013'
-  },
-  {
-    month: 'Apr',
-    days: 30,
-    startDate: '4/1/2013',
-    endDate: '4/30/2013'
-  },
-  {
-    month: 'May',
-    days: 31,
-    startDate: '5/1/2013',
-    endDate: '5/31/2013'
-  },
-  {
-    month: 'Jun',
-    days: 30,
-    startDate: '6/1/2013',
-    endDate: '6/30/2013'
-  },
-  {
-    month: 'Jul',
-    days: 31,
-    startDate: '7/1/2013',
-    endDate: '7/31/2013'
-  },
-  {
-    month: 'Aug',
-    days: 31,
-    startDate: '8/1/2013',
-    endDate: '8/31/2013'
-  },
-  {
-    month: 'Sep',
-    days: 30,
-    startDate: '9/1/2013',
-    endDate: '9/30/2013'
-  },
-  {
-    month: 'Oct',
-    days: 31,
-    startDate: '10/1/2013',
-    endDate: '10/31/2013'
-  },
-  {
-    month: 'Nov',
-    days: 30,
-    startDate: '11/1/2013',
-    endDate: '11/30/2013'
-  },
-  {
-    month: 'Dec',
-    days: 31,
-    startDate: '12/1/2013',
-    endDate: '12/31/2013'
-  },
-  {
-    month: 'Jan',
-    days: 31,
-    startDate: '1/1/2014',
-    endDate: '1/31/2014'
-  },
-  {
-    month: 'Feb',
-    days: 29,
-    startDate: '2/1/2014',
-    endDate: '2/29/2014'
-  },
-  {
-    month: 'Mar',
-    days: 31,
-    startDate: '3/1/2014',
-    endDate: '3/31/2014'
-  },
-  {
-    month: 'Apr',
-    days: 30,
-    startDate: '4/1/2014',
-    endDate: '4/30/2014'
-  },
-  {
-    month: 'May',
-    days: 31,
-    startDate: '5/1/2014',
-    endDate: '5/31/2014'
-  }
-];
 const MonthDays2: MonthDaysArray = [
   {
     month: 'Jan',
@@ -352,39 +148,21 @@ const MonthDays2: MonthDaysArray = [
     endDate: '12/31/'
   }
 ];
-
 type RecordsProp = { dogName: string; startDate: string; endDate: string };
 interface HomePageProps {
   isLoading: boolean;
   records: RecordsProp[];
 }
-type OneWeekProps = {
-  pixelPerDay: number;
-  date: Date;
-};
 type DayPosProps = {
   pixelPerDay: number;
   date: Date;
-  screenWidth: number;
 };
-
 type XPosProps = {
   dateAsNum: number;
   screenWidth: number;
   year: number;
 };
 type YPosProps = {
-  dateAsNum: number;
-  screenWidth: number;
-  rowHeight: number;
-};
-type XOffsetProps = {
-  screenWidth: number;
-  rowHeight: number;
-  year: number;
-  pixelPerDay: number;
-};
-type DateCircleProps = {
   dateAsNum: number;
   screenWidth: number;
   rowHeight: number;
@@ -398,6 +176,15 @@ type PathReturnProps = {
   startDateRow: number;
   rowHeight: number;
   startOffset: number;
+  dogName: string;
+};
+type GradientReturnProps = {
+  currentLine: number;
+  screenWidth: number;
+  numLines: number[];
+  startX: number;
+  endX: number;
+  dogName: string;
 };
 type DatePathProps = {
   startDateAsNum: number;
@@ -410,7 +197,6 @@ type DatePathProps = {
   yearEnd: number;
   pixelPerDay: number;
 };
-
 type MonthRectProps = {
   startDateAsNum: number;
   endDateAsNum: number;
@@ -426,7 +212,7 @@ const monthDashGray = '#e4e4e4';
 const lineBorderGray = '#E0E0E0';
 const monthTextGray = '#E0E0E0';
 
-function OneWeek({ pixelPerDay, date }: OneWeekProps) {
+function DayPos({ pixelPerDay, date }: DayPosProps) {
   const oneDayScale = scaleTime()
     .domain([new Date(2012, 0, 1), new Date(2012, 0, 2)]) // first dog Date, first Dog Date + 1 day
     .range([0, pixelPerDay]);
@@ -438,15 +224,6 @@ function returnXPos({ dateAsNum, screenWidth, year }: XPosProps) {
 function returnYPos({ dateAsNum, screenWidth, rowHeight }: YPosProps) {
   return Math.floor(dateAsNum / screenWidth) * rowHeight + rowHeight / 2;
 }
-function DayPos({ pixelPerDay, date, screenWidth }: DayPosProps) {
-  const oneDayScale = scaleTime()
-    .domain([new Date(2012, 0, 1), new Date(2012, 0, 2)]) // first dog Date, first Dog Date + 1 day
-    .range([0, pixelPerDay]);
-  // year overflow add on ONLY in X
-  // screenwidth
-
-  return oneDayScale(date);
-}
 
 function pathReturn({
   currentLine,
@@ -456,14 +233,15 @@ function pathReturn({
   startX,
   endX,
   rowHeight,
-  startOffset
+  startOffset,
+  dogName
 }: PathReturnProps) {
   if (currentLine === 0) {
     if (numLines.length === 1) {
       return (
         <path
           strokeWidth="2"
-          fill="url(#grad1)"
+          fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
           filter="url(#distort)"
           d={`M${startX} ${
             startDateRow + startOffset
@@ -475,7 +253,7 @@ function pathReturn({
     return (
       <path
         strokeWidth="2"
-        fill="url(#grad1)"
+        fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
         d={`M${startX} ${
           startDateRow + startOffset
         } v -4 H${screenWidth}  v 4 h.01 v4`}
@@ -487,7 +265,7 @@ function pathReturn({
     return (
       <path
         strokeWidth="2"
-        fill="url(#grad1)"
+        fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
         filter="url(#distort)"
         d={`M0 ${
           startDateRow + currentLine * rowHeight + startOffset
@@ -498,7 +276,7 @@ function pathReturn({
   return (
     <path
       strokeWidth="2"
-      fill="url(#grad1)"
+      fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
       filter="url(#distort)"
       d={`M0 ${
         startDateRow + currentLine * rowHeight + startOffset
@@ -544,16 +322,18 @@ function datePath({
 
   return (
     <g>
-      <Link to={`/${dogName.replace(' ', '')}`}>
-        <image
-          href={second}
-          style={{ cursor: 'pointer' }}
-          height="50"
-          x={startX - 64}
-          y={startDateRow + startOffset - 54}
-        />
-      </Link>
-      {numLines.fill(0).map(
+      <g>
+        <Link to={`/${dogName.replace(' ', '')}`}>
+          <image
+            href={second}
+            style={{ cursor: 'pointer' }}
+            height="90"
+            x={startX - 64}
+            y={startDateRow + startOffset - 54}
+          />
+        </Link>
+      </g>
+      {numLines.map(
         (x, i) =>
           // eslint-disable-next-line implicit-arrow-linebreak
           pathReturn({
@@ -564,7 +344,8 @@ function datePath({
             startX,
             endX,
             rowHeight,
-            startOffset
+            startOffset,
+            dogName
           })
         // eslint-disable-next-line function-paren-newline
       )}
@@ -702,24 +483,172 @@ function monthRect({
   );
 }
 
+function gradientReturn({
+  currentLine,
+  screenWidth,
+  numLines,
+  startX,
+  endX,
+  dogName
+}: GradientReturnProps) {
+  const pixelPerDay = 8;
+  const colorScale = scaleSequential()
+    .domain([
+      DayPos({
+        pixelPerDay,
+        date: new Date(2012, 0, 1)
+      }) - 7000,
+      DayPos({
+        pixelPerDay,
+        date: new Date(2022, 11, 30)
+      }) +
+        30 * (2022 - 2011) * pixelPerDay
+    ]) // first dog Date, first Dog Date + 1 day
+    .interpolator(interpolateYlOrRd);
+
+  if (currentLine === 0) {
+    if (numLines.length === 1) {
+      return (
+        <linearGradient
+          // eslint-disable-next-line react/no-array-index-key
+          key={`${dogName}_${currentLine}`}
+          id={`grad${dogName.replace(' ', '')}_${currentLine}`}
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop
+            offset="0%"
+            style={{
+              stopColor: colorScale(startX),
+              stopOpacity: '1'
+            }}
+          />
+          <stop
+            offset="100%"
+            style={{
+              stopColor: colorScale(endX),
+              stopOpacity: '1'
+            }}
+          />
+        </linearGradient>
+      );
+    }
+
+    return (
+      <linearGradient
+        // eslint-disable-next-line react/no-array-index-key
+        key={`${dogName}_${currentLine}`}
+        id={`grad${dogName.replace(' ', '')}_${currentLine}`}
+        x1="0%"
+        y1="0%"
+        x2="100%"
+        y2="0%"
+      >
+        <stop
+          offset="0%"
+          style={{
+            stopColor: colorScale(startX),
+            stopOpacity: '1'
+          }}
+        />
+        <stop
+          offset="100%"
+          style={{
+            stopColor: colorScale(startX + screenWidth),
+            stopOpacity: '1'
+          }}
+        />
+      </linearGradient>
+    );
+  }
+  if (currentLine + 1 === numLines.length) {
+    return (
+      <linearGradient
+        // eslint-disable-next-line react/no-array-index-key
+        key={`${dogName}_${currentLine}`}
+        id={`grad${dogName.replace(' ', '')}_${currentLine}`}
+        x1="0%"
+        y1="0%"
+        x2="100%"
+        y2="0%"
+      >
+        <stop
+          offset="0%"
+          style={{
+            stopColor: colorScale(startX + screenWidth * (numLines.length - 1)),
+            stopOpacity: '1'
+          }}
+        />
+        <stop
+          offset="100%"
+          style={{
+            stopColor: colorScale(endX),
+            stopOpacity: '1'
+          }}
+        />
+      </linearGradient>
+    );
+  }
+  return (
+    <linearGradient
+      // eslint-disable-next-line react/no-array-index-key
+      key={`${dogName}_${currentLine}`}
+      id={`grad${dogName.replace(' ', '')}_${currentLine}`}
+      x1="0%"
+      y1="0%"
+      x2="100%"
+      y2="0%"
+    >
+      <stop
+        offset="0%"
+        style={{
+          stopColor: colorScale(startX + screenWidth * (currentLine - 1)),
+          stopOpacity: '1'
+        }}
+      />
+      <stop
+        offset="100%"
+        style={{
+          stopColor: colorScale(startX + screenWidth * currentLine),
+          stopOpacity: '1'
+        }}
+      />
+    </linearGradient>
+  );
+}
+
 function TestTwo({ isLoading, records }: HomePageProps) {
   const rowHeight = 60;
   const pixelPerDay = 8;
-  const startOffset = 100;
+  const startOffset = 500;
   const [width, setWidth] = useState({ width: 1, numRows: 0 });
   const widthRef = useRef<any>();
-  const totalTimeWidth = OneWeek({
+  const totalTimeWidth = DayPos({
     pixelPerDay,
-    date: new Date(2022, 0, 2)
+    date: new Date(2022, 11, 31)
   });
-
   const updateWidth = () => {
     const newWidth = widthRef.current.clientWidth;
     setWidth({
       width: newWidth,
-      numRows: totalTimeWidth / newWidth
+      numRows: (totalTimeWidth + 10 * 30 * pixelPerDay) / newWidth
     });
   };
+  const colorScale = scaleSequential()
+    .domain([
+      DayPos({
+        pixelPerDay,
+        date: new Date(2012, 0, 1)
+      }) - 7000,
+      DayPos({
+        pixelPerDay,
+        date: new Date(2022, 11, 30)
+      }) +
+        30 * (2022 - 2011) * pixelPerDay
+    ]) // first dog Date, first Dog Date + 1 day
+    .interpolator(interpolateYlOrRd);
 
   // get width on initial render
   useEffect(() => {
@@ -734,19 +663,10 @@ function TestTwo({ isLoading, records }: HomePageProps) {
   return (
     <Background>
       <Content ref={widthRef}>
-        <Blocks>
-          <TitleBlock> Testing</TitleBlock>
-          <VerticalBlocks>
-            <SubtitleBlock>
-              The golden retrievers we have loved and
-            </SubtitleBlock>
-            <SubtitleBlock> fostered since 2012.</SubtitleBlock>
-          </VerticalBlocks>
-        </Blocks>
         {!isLoading ? (
           <ResizingSvg
             width={width.width}
-            height={width.numRows * rowHeight * 2 + rowHeight}
+            height={width.numRows * rowHeight + startOffset + rowHeight / 2}
           >
             <defs>
               <filter id="distort" y="-10" height="20">
@@ -767,16 +687,47 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                   stitchTiles="stitch"
                 />
               </filter>
-              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop
-                  offset="0%"
-                  style={{ stopColor: 'rgb(255,139,86)', stopOpacity: '1' }}
-                />
-                <stop
-                  offset="100%"
-                  style={{ stopColor: 'rgb(231,170,14)', stopOpacity: '1' }}
-                />
-              </linearGradient>
+              {records.map((x: RecordsProp) => {
+                const yearStart = new Date(x.startDate).getFullYear();
+                const yearEnd = new Date(x.endDate).getFullYear();
+                const startDateAsNum = DayPos({
+                  pixelPerDay,
+                  date: new Date(x.startDate)
+                });
+                const endDateAsNum = DayPos({
+                  pixelPerDay,
+                  date: new Date(x.endDate)
+                });
+                const screenWidth = width.width;
+                const startDateRow = returnYPos({
+                  dateAsNum:
+                    startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
+                  screenWidth,
+                  rowHeight
+                });
+                const endDateRow = returnYPos({
+                  dateAsNum: endDateAsNum + 30 * (yearEnd - 2011) * pixelPerDay,
+                  screenWidth,
+                  rowHeight
+                });
+                const numLines = new Array(
+                  (endDateRow - startDateRow) / rowHeight + 1
+                ).fill(0);
+                return numLines.map(
+                  (y, i) =>
+                    // eslint-disable-next-line implicit-arrow-linebreak
+                    gradientReturn({
+                      currentLine: i,
+                      screenWidth,
+                      numLines,
+                      startX: startDateAsNum,
+                      endX: endDateAsNum,
+                      dogName: x.dogName
+                    })
+                  // eslint-disable-next-line function-paren-newline
+                );
+                // eslint-disable-next-line function-paren-newline
+              })}
             </defs>
 
             {years.map(
@@ -789,15 +740,13 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                       startDateAsNum:
                         DayPos({
                           pixelPerDay,
-                          date: new Date(`${x.startDate}${yr}`),
-                          screenWidth: width.width
+                          date: new Date(`${x.startDate}${yr}`)
                         }) +
                         (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
                       endDateAsNum:
                         DayPos({
                           pixelPerDay,
-                          date: new Date(`${x.endDate}${yr}`),
-                          screenWidth: width.width
+                          date: new Date(`${x.endDate}${yr}`)
                         }) +
                         (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
                       screenWidth: width.width,
@@ -815,11 +764,11 @@ function TestTwo({ isLoading, records }: HomePageProps) {
               (x: RecordsProp) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
                 datePath({
-                  startDateAsNum: OneWeek({
+                  startDateAsNum: DayPos({
                     pixelPerDay,
                     date: new Date(x.startDate)
                   }),
-                  endDateAsNum: OneWeek({
+                  endDateAsNum: DayPos({
                     pixelPerDay,
                     date: new Date(x.endDate)
                   }),
@@ -834,7 +783,6 @@ function TestTwo({ isLoading, records }: HomePageProps) {
 
               // eslint-disable-next-line function-paren-newline
             )}
-
             {years.map((yr: string) => (
               <g key={yr}>
                 <rect
@@ -842,8 +790,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                     dateAsNum:
                       DayPos({
                         pixelPerDay,
-                        date: new Date(`1/1/${yr}`),
-                        screenWidth: width.width
+                        date: new Date(`1/1/${yr}`)
                       }) +
                       (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
                       0,
@@ -855,8 +802,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                       dateAsNum:
                         DayPos({
                           pixelPerDay,
-                          date: new Date(`1/1/${yr}`),
-                          screenWidth: width.width
+                          date: new Date(`1/1/${yr}`)
                         }) +
                         (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
                       screenWidth: width.width,
@@ -867,7 +813,6 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                   }
                   height={rowHeight}
                   width={30 * pixelPerDay}
-                  //   fill="url(#grad1)"
                   fill="#f8f8f8"
                   strokeWidth="2"
                   stroke="#BDBDBD"
@@ -878,8 +823,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                     dateAsNum:
                       DayPos({
                         pixelPerDay,
-                        date: new Date(`1/1/${yr}`),
-                        screenWidth: width.width
+                        date: new Date(`1/1/${yr}`)
                       }) +
                       (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
                       40,
@@ -891,8 +835,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                       dateAsNum:
                         DayPos({
                           pixelPerDay,
-                          date: new Date(`1/1/${yr}`),
-                          screenWidth: width.width
+                          date: new Date(`1/1/${yr}`)
                         }) +
                         (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
                         40,
@@ -900,7 +843,12 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                       rowHeight
                     }) + startOffset
                   }
-                  fill="url(#grad1)"
+                  fill={colorScale(
+                    DayPos({
+                      pixelPerDay,
+                      date: new Date(parseInt(yr, 10), 0, 1)
+                    })
+                  )}
                 >
                   {yr}
                 </TitleSVGText>
@@ -908,7 +856,35 @@ function TestTwo({ isLoading, records }: HomePageProps) {
             ))}
           </ResizingSvg>
         ) : null}
+        <div style={{ background: '#333333', height: '250px' }} />
       </Content>
+      <SpiralContainer>
+        <svg width="100%" height="37px">
+          <pattern
+            id="pattern"
+            x="0"
+            y="0"
+            patternUnits="userSpaceOnUse"
+            width="50"
+            height="37"
+          >
+            <g transform="translate(3,0)">
+              {' '}
+              <path
+                d="M4.49818 23.4467C2.49818 16.6134 -0.701821 2.7467 2.49818 1.9467C6.49818 0.946695 8.5 0.446695 9 1.9467C9.4 3.1467 8.83333 16.78 8.5 23.4467"
+                stroke="#333333"
+                strokeWidth="2"
+                fill="none"
+              />
+            </g>
+
+            <rect fill="#333333" x="2" y="20" width="14" height="14">
+              {' '}
+            </rect>
+          </pattern>
+          <rect x="0" y="0" width="100%" height="37px" fill="url(#pattern)" />
+        </svg>
+      </SpiralContainer>
     </Background>
   );
 }

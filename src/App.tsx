@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
-import HomePage from './components/HomePage';
-import Test from './components/test';
-import TestTwo from './components/testtwo';
+import HomePage from './components/testtwo';
 import DogPage from './components/DogPage';
 import './stylesheet/fonts.css';
 
@@ -38,14 +36,6 @@ function App() {
           <Route
             path="/"
             element={<HomePage isLoading={isLoading} records={records} />}
-          />
-          <Route
-            path="/test"
-            element={<Test isLoading={isLoading} records={records} />}
-          />
-          <Route
-            path="/testtwo"
-            element={<TestTwo isLoading={isLoading} records={records} />}
           />
           {records.map((x: RecordsProp) => (
             <Route

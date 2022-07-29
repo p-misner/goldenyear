@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { scaleTime } from 'd3-scale';
 import second from '../data/dogSvgs/second.svg';
+import '../stylesheet/fonts.css';
 
 const Background = styled.div`
   background: rgb(34, 193, 195);
