@@ -8,7 +8,6 @@ import './stylesheet/fonts.css';
 type RecordsProp = { dogName: string; startDate: string; endDate: string };
 
 function App() {
-  const [random, setRandom] = useState(5);
   const [isLoading, setLoading] = useState(true);
   const [records, setRecords] = useState([]);
 
@@ -23,12 +22,21 @@ function App() {
       }
 
       const recs = await response.json();
-      setRecords(recs);
+      setRecords(
+        recs.sort(
+          // eslint-disable-next-line no-confusing-arrow
+          (a: any, b: any) =>
+            // eslint-disable-next-line implicit-arrow-linebreak
+            Date.parse(a.startDate) > Date.parse(b.startDate) ? 1 : -1
+          // eslint-disable-next-line function-paren-newline
+        )
+      );
       setLoading(false);
     }
 
     getRecords();
   }, []);
+
   return (
     <Router>
       <div>
@@ -44,11 +52,6 @@ function App() {
               element={<DogPage dogName={x.dogName} />}
             />
           ))}
-
-          <Route
-            path={`/page${random}`}
-            element={<DogPage dogName={`dogNum${random}`} />}
-          />
         </Routes>
       </div>
     </Router>

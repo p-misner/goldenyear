@@ -6,6 +6,10 @@ import { scaleTime } from 'd3-scale';
 import second from '../data/dogSvgs/second.svg';
 import '../stylesheet/fonts.css';
 
+// Links
+// Custom Cursor: https://codesandbox.io/s/react-custom-cursor-component-8lcvi?file=/src/Sides.js
+//           https://medium.com/swlh/cool-custom-cursors-with-react-framer-motion-part-1-228126bcae68
+
 const Background = styled.div`
   background: rgb(34, 193, 195);
   background: linear-gradient(
@@ -28,7 +32,8 @@ const Content = styled.div`
   margin: 24px auto;
   overflow: scroll;
   height: 94vh;
-  border: 1px solid black;
+  max-height: 300px;
+  border: 1px solid blue;
 `;
 const Blocks = styled.div`
   display: flex;

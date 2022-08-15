@@ -3,23 +3,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { scaleTime, scaleSequential, scaleLinear } from 'd3-scale';
-import { interpolateTurbo, interpolateYlOrRd } from 'd3-scale-chromatic';
 
-import second from '../data/dogSvgs/ivy.svg';
+import bgPic from '../data/bgColor.png';
+import second from '../data/dogSvgs/DogBackground.svg';
 
 const Background = styled.div`
-  background: rgb(34, 193, 195);
-  background: linear-gradient(
-    83deg,
-    rgba(253, 195, 215, 0.8055555555555556) 0%,
-    rgba(239, 242, 234, 0.5300925925925926) 36%,
-    rgba(248, 209, 118, 0.3287037037037037) 55%,
-    rgba(240, 239, 222, 0.4189814814814815) 71%,
-    rgba(253, 187, 45, 0.21064814814814814) 100%
-  );
   padding: 0px;
   height: 100vh;
   overflow: hidden;
+  position: relative;
+  background-image: url(${bgPic});
+  background-position: center top;
+  background-repeat: no-repeat;
 `;
 const SpiralContainer = styled.div`
   max-width: 1180px;
@@ -30,6 +25,7 @@ const SpiralContainer = styled.div`
   height: 37px;
   left: 0;
   right: 0;
+  z-index: 4;
 `;
 const Content = styled.div`
   background-color: white;
@@ -38,11 +34,15 @@ const Content = styled.div`
   margin: 44px auto;
   overflow: scroll;
   height: 94vh;
+  max-height: 1000px;
   border: 1px solid black;
+  position: relative;
+  z-index: 3;
 `;
 const ResizingSvg = styled.svg`
   z-index: 1;
   height: auto;
+  min-height: 500px;
 `;
 const TitleSVGText = styled.text`
   font-family: 'Cormorant', serif;
@@ -52,6 +52,43 @@ const TitleSVGText = styled.text`
 const MonthSVGText = styled.text`
   font-family: 'Cormorant', serif;
   font-size: 16px;
+`;
+
+const BlurryGradientTop = styled.div`
+  position: absolute;
+  background-clip: content-box;
+  top: -200px;
+  left: 300px;
+  transform: translate(-50%, 0%);
+  width: 1200px;
+  height: 900px;
+  border-radius: 50% 22% 40% 80%;
+  filter: blur(100px);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(235, 205, 203, 1),
+    rgba(243, 220, 146, 1),
+    rgba(249, 235, 71, 0)
+  );
+  opacity: 0;
+`;
+const BlurryGradientBottom = styled.div`
+  position: absolute;
+  background-clip: content-box;
+  bottom: -400px;
+  right: -600px;
+  transform: translate(-50%, 0%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50% 22% 40% 80%;
+  filter: blur(100px);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(235, 205, 203, 1),
+    rgba(243, 220, 146, 1),
+    rgba(249, 235, 71, 0)
+  );
+  opacity: 0;
 `;
 const years = [
   '2012',
@@ -177,14 +214,7 @@ type PathReturnProps = {
   rowHeight: number;
   startOffset: number;
   dogName: string;
-};
-type GradientReturnProps = {
-  currentLine: number;
-  screenWidth: number;
-  numLines: number[];
-  startX: number;
-  endX: number;
-  dogName: string;
+  num: number;
 };
 type DatePathProps = {
   startDateAsNum: number;
@@ -196,6 +226,7 @@ type DatePathProps = {
   yearStart: number;
   yearEnd: number;
   pixelPerDay: number;
+  num: number;
 };
 type MonthRectProps = {
   startDateAsNum: number;
@@ -234,17 +265,18 @@ function pathReturn({
   endX,
   rowHeight,
   startOffset,
-  dogName
+  dogName,
+  num
 }: PathReturnProps) {
   if (currentLine === 0) {
     if (numLines.length === 1) {
       return (
         <path
           strokeWidth="2"
-          fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
+          // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
           filter="url(#distort)"
           d={`M${startX} ${
-            startDateRow + startOffset
+            startDateRow + startOffset + (num % 3) * 10 - 10
           } v -4 H${endX}  v 4 h.01 v4`}
         />
       );
@@ -253,9 +285,9 @@ function pathReturn({
     return (
       <path
         strokeWidth="2"
-        fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
+        // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
         d={`M${startX} ${
-          startDateRow + startOffset
+          startDateRow + startOffset + (num % 3) * 10 - 10
         } v -4 H${screenWidth}  v 4 h.01 v4`}
         filter="url(#distort)"
       />
@@ -265,10 +297,14 @@ function pathReturn({
     return (
       <path
         strokeWidth="2"
-        fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
+        // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
         filter="url(#distort)"
         d={`M0 ${
-          startDateRow + currentLine * rowHeight + startOffset
+          startDateRow +
+          currentLine * rowHeight +
+          startOffset +
+          (num % 3) * 10 -
+          10
         } v -4 H${endX}  v 4 h.01 v4`}
       />
     );
@@ -276,14 +312,20 @@ function pathReturn({
   return (
     <path
       strokeWidth="2"
-      fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
+      // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
       filter="url(#distort)"
       d={`M0 ${
-        startDateRow + currentLine * rowHeight + startOffset
+        startDateRow +
+        currentLine * rowHeight +
+        startOffset +
+        (num % 3) * 10 -
+        10
       } v -4 H${screenWidth}  v 4 h.01 v4`}
     />
   );
 }
+
+// startDateRow, endDateRow, startX, endX
 function datePath({
   startDateAsNum,
   endDateAsNum,
@@ -293,7 +335,8 @@ function datePath({
   dogName,
   yearStart,
   yearEnd,
-  pixelPerDay
+  pixelPerDay,
+  num
 }: DatePathProps) {
   const startDateRow = returnYPos({
     dateAsNum: startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
@@ -329,7 +372,7 @@ function datePath({
             style={{ cursor: 'pointer' }}
             height="90"
             x={startX - 64}
-            y={startDateRow + startOffset - 54}
+            y={startDateRow + startOffset - 54 + (num % 3) * 10 - 10}
           />
         </Link>
       </g>
@@ -345,7 +388,8 @@ function datePath({
             endX,
             rowHeight,
             startOffset,
-            dogName
+            dogName,
+            num
           })
         // eslint-disable-next-line function-paren-newline
       )}
@@ -353,9 +397,6 @@ function datePath({
   );
 }
 
-// new x y position calculator
-// based on the year you ahve an y offset
-// x position of every year starts from 0
 function monthRect({
   startDateAsNum,
   endDateAsNum,
@@ -483,146 +524,10 @@ function monthRect({
   );
 }
 
-function gradientReturn({
-  currentLine,
-  screenWidth,
-  numLines,
-  startX,
-  endX,
-  dogName
-}: GradientReturnProps) {
-  const pixelPerDay = 8;
-  const colorScale = scaleSequential()
-    .domain([
-      DayPos({
-        pixelPerDay,
-        date: new Date(2012, 0, 1)
-      }) - 7000,
-      DayPos({
-        pixelPerDay,
-        date: new Date(2022, 11, 30)
-      }) +
-        30 * (2022 - 2011) * pixelPerDay
-    ]) // first dog Date, first Dog Date + 1 day
-    .interpolator(interpolateYlOrRd);
-
-  if (currentLine === 0) {
-    if (numLines.length === 1) {
-      return (
-        <linearGradient
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${dogName}_${currentLine}`}
-          id={`grad${dogName.replace(' ', '')}_${currentLine}`}
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="0%"
-        >
-          <stop
-            offset="0%"
-            style={{
-              stopColor: colorScale(startX),
-              stopOpacity: '1'
-            }}
-          />
-          <stop
-            offset="100%"
-            style={{
-              stopColor: colorScale(endX),
-              stopOpacity: '1'
-            }}
-          />
-        </linearGradient>
-      );
-    }
-
-    return (
-      <linearGradient
-        // eslint-disable-next-line react/no-array-index-key
-        key={`${dogName}_${currentLine}`}
-        id={`grad${dogName.replace(' ', '')}_${currentLine}`}
-        x1="0%"
-        y1="0%"
-        x2="100%"
-        y2="0%"
-      >
-        <stop
-          offset="0%"
-          style={{
-            stopColor: colorScale(startX),
-            stopOpacity: '1'
-          }}
-        />
-        <stop
-          offset="100%"
-          style={{
-            stopColor: colorScale(startX + screenWidth),
-            stopOpacity: '1'
-          }}
-        />
-      </linearGradient>
-    );
-  }
-  if (currentLine + 1 === numLines.length) {
-    return (
-      <linearGradient
-        // eslint-disable-next-line react/no-array-index-key
-        key={`${dogName}_${currentLine}`}
-        id={`grad${dogName.replace(' ', '')}_${currentLine}`}
-        x1="0%"
-        y1="0%"
-        x2="100%"
-        y2="0%"
-      >
-        <stop
-          offset="0%"
-          style={{
-            stopColor: colorScale(startX + screenWidth * (numLines.length - 1)),
-            stopOpacity: '1'
-          }}
-        />
-        <stop
-          offset="100%"
-          style={{
-            stopColor: colorScale(endX),
-            stopOpacity: '1'
-          }}
-        />
-      </linearGradient>
-    );
-  }
-  return (
-    <linearGradient
-      // eslint-disable-next-line react/no-array-index-key
-      key={`${dogName}_${currentLine}`}
-      id={`grad${dogName.replace(' ', '')}_${currentLine}`}
-      x1="0%"
-      y1="0%"
-      x2="100%"
-      y2="0%"
-    >
-      <stop
-        offset="0%"
-        style={{
-          stopColor: colorScale(startX + screenWidth * (currentLine - 1)),
-          stopOpacity: '1'
-        }}
-      />
-      <stop
-        offset="100%"
-        style={{
-          stopColor: colorScale(startX + screenWidth * currentLine),
-          stopOpacity: '1'
-        }}
-      />
-    </linearGradient>
-  );
-}
-
 function TestTwo({ isLoading, records }: HomePageProps) {
   const rowHeight = 60;
   const pixelPerDay = 8;
-  const startOffset = 500;
+  const startOffset = 650;
   const [width, setWidth] = useState({ width: 1, numRows: 0 });
   const widthRef = useRef<any>();
   const totalTimeWidth = DayPos({
@@ -636,19 +541,6 @@ function TestTwo({ isLoading, records }: HomePageProps) {
       numRows: (totalTimeWidth + 10 * 30 * pixelPerDay) / newWidth
     });
   };
-  const colorScale = scaleSequential()
-    .domain([
-      DayPos({
-        pixelPerDay,
-        date: new Date(2012, 0, 1)
-      }) - 7000,
-      DayPos({
-        pixelPerDay,
-        date: new Date(2022, 11, 30)
-      }) +
-        30 * (2022 - 2011) * pixelPerDay
-    ]) // first dog Date, first Dog Date + 1 day
-    .interpolator(interpolateYlOrRd);
 
   // get width on initial render
   useEffect(() => {
@@ -662,6 +554,8 @@ function TestTwo({ isLoading, records }: HomePageProps) {
 
   return (
     <Background>
+      <BlurryGradientTop />
+      <BlurryGradientBottom />
       <Content ref={widthRef}>
         {!isLoading ? (
           <ResizingSvg
@@ -687,54 +581,38 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                   stitchTiles="stitch"
                 />
               </filter>
-              {records.map((x: RecordsProp) => {
-                const yearStart = new Date(x.startDate).getFullYear();
-                const yearEnd = new Date(x.endDate).getFullYear();
-                const startDateAsNum = DayPos({
-                  pixelPerDay,
-                  date: new Date(x.startDate)
-                });
-                const endDateAsNum = DayPos({
-                  pixelPerDay,
-                  date: new Date(x.endDate)
-                });
-                const screenWidth = width.width;
-                const startDateRow = returnYPos({
-                  dateAsNum:
-                    startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
-                  screenWidth,
-                  rowHeight
-                });
-                const endDateRow = returnYPos({
-                  dateAsNum: endDateAsNum + 30 * (yearEnd - 2011) * pixelPerDay,
-                  screenWidth,
-                  rowHeight
-                });
-                const numLines = new Array(
-                  (endDateRow - startDateRow) / rowHeight + 1
-                ).fill(0);
-                return numLines.map(
-                  (y, i) =>
-                    // eslint-disable-next-line implicit-arrow-linebreak
-                    gradientReturn({
-                      currentLine: i,
-                      screenWidth,
-                      numLines,
-                      startX: startDateAsNum,
-                      endX: endDateAsNum,
-                      dogName: x.dogName
-                    })
-                  // eslint-disable-next-line function-paren-newline
-                );
-                // eslint-disable-next-line function-paren-newline
-              })}
+              <linearGradient
+                id="fullGrad"
+                x1="-30%"
+                y1="-30%"
+                x2="100%"
+                y2="100%"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop
+                  offset="0%"
+                  style={{ stopColor: 'rgb(255,0,0)', stopOpacity: '1' }}
+                />
+                <stop
+                  offset="33%"
+                  style={{ stopColor: '#FFE669', stopOpacity: '.8' }}
+                />
+                <stop
+                  offset="66%"
+                  style={{ stopColor: '#FFA837', stopOpacity: '.8' }}
+                />
+                <stop
+                  offset="100%"
+                  style={{ stopColor: '#FF5100', stopOpacity: '.8' }}
+                />
+              </linearGradient>
             </defs>
 
             {years.map(
               (yr: string) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
                 MonthDays2.map(
-                  (x: MonthDaysProp, i: number) =>
+                  (x: MonthDaysProp) =>
                     // eslint-disable-next-line implicit-arrow-linebreak
                     monthRect({
                       startDateAsNum:
@@ -760,31 +638,34 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                 )
               // eslint-disable-next-line function-paren-newline
             )}
-            {records.map(
-              (x: RecordsProp) =>
-                // eslint-disable-next-line implicit-arrow-linebreak
-                datePath({
-                  startDateAsNum: DayPos({
+            <g fill="url(#fullGrad)">
+              {records.map(
+                (x: RecordsProp, i: number) =>
+                  // eslint-disable-next-line implicit-arrow-linebreak
+                  datePath({
+                    startDateAsNum: DayPos({
+                      pixelPerDay,
+                      date: new Date(x.startDate)
+                    }),
+                    endDateAsNum: DayPos({
+                      pixelPerDay,
+                      date: new Date(x.endDate)
+                    }),
+                    screenWidth: width.width,
+                    rowHeight,
+                    startOffset,
+                    dogName: x.dogName,
+                    yearStart: new Date(x.startDate).getFullYear(),
+                    yearEnd: new Date(x.endDate).getFullYear(),
                     pixelPerDay,
-                    date: new Date(x.startDate)
-                  }),
-                  endDateAsNum: DayPos({
-                    pixelPerDay,
-                    date: new Date(x.endDate)
-                  }),
-                  screenWidth: width.width,
-                  rowHeight,
-                  startOffset,
-                  dogName: x.dogName,
-                  yearStart: new Date(x.startDate).getFullYear(),
-                  yearEnd: new Date(x.endDate).getFullYear(),
-                  pixelPerDay
-                })
+                    num: i
+                  })
 
-              // eslint-disable-next-line function-paren-newline
-            )}
+                // eslint-disable-next-line function-paren-newline
+              )}
+            </g>
             {years.map((yr: string) => (
-              <g key={yr}>
+              <g key={yr} fill="url(#fullGrad)">
                 <rect
                   x={returnXPos({
                     dateAsNum:
@@ -826,7 +707,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                         date: new Date(`1/1/${yr}`)
                       }) +
                       (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                      40,
+                      70,
                     screenWidth: width.width,
                     year: parseInt(yr, 10)
                   })}
@@ -841,14 +722,10 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                         40,
                       screenWidth: width.width,
                       rowHeight
-                    }) + startOffset
+                    }) +
+                    startOffset +
+                    6
                   }
-                  fill={colorScale(
-                    DayPos({
-                      pixelPerDay,
-                      date: new Date(parseInt(yr, 10), 0, 1)
-                    })
-                  )}
                 >
                   {yr}
                 </TitleSVGText>

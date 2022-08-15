@@ -814,6 +814,23 @@ function Test({ isLoading, records }: HomePageProps) {
                   style={{ stopColor: 'rgb(231,170,14)', stopOpacity: '1' }}
                 />
               </linearGradient>
+              <linearGradient
+                id="fullGrad"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop
+                  offset="0%"
+                  style={{ stopColor: 'rgb(255,139,86)', stopOpacity: '1' }}
+                />
+                <stop
+                  offset="100%"
+                  style={{ stopColor: 'rgb(231,170,14)', stopOpacity: '1' }}
+                />
+              </linearGradient>
             </defs>
 
             {years.map(

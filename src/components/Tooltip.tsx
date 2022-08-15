@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import React, { useState, createRef, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -8,8 +9,8 @@ type TooltipContainerProps = {
 
 const TooltipContainer = styled.div.attrs<TooltipContainerProps>((props) => ({
   style: {
-    left: `${props.xPos + 10 || 500}px`,
-    top: `${props.yPos + 10 || 500}px`
+    left: `${props.xPos - 0 || 500}px`,
+    top: `${props.yPos - 0 || 500}px`
   }
 }))<TooltipContainerProps>`
   background-color: white;
@@ -28,6 +29,7 @@ const TooltipWrapper = styled.div`
   margin: 0 12px;
   display: inline;
   vertical-align: middle;
+  position: static;
 `;
 
 const TargetImage = styled.img`
@@ -62,11 +64,9 @@ type PosProps = {
 function Tooltip({ text, imgString }: TooltipProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const targetRef = useRef(null);
   const showTooltip = isHovered || isFocused;
   const [pos, setPos] = useState<PosProps>({ xPos: 5, yPos: 5 });
   const cursor = useRef<HTMLImageElement>(null);
-
   const updatePosition = useCallback((event: { pageX: any; pageY: any }) => {
     setPos({ xPos: event.pageX, yPos: event.pageY });
   }, []);
