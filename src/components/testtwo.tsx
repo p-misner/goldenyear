@@ -268,12 +268,14 @@ function pathReturn({
   dogName,
   num
 }: PathReturnProps) {
+  const elem = document.getElementById('dogs');
+  const dogGroup = document.getElementById(dogName);
+
   if (currentLine === 0) {
     if (numLines.length === 1) {
       return (
         <path
           strokeWidth="2"
-          // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
           filter="url(#distort)"
           d={`M${startX} ${
             startDateRow + startOffset + (num % 3) * 10 - 10
@@ -285,7 +287,6 @@ function pathReturn({
     return (
       <path
         strokeWidth="2"
-        // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
         d={`M${startX} ${
           startDateRow + startOffset + (num % 3) * 10 - 10
         } v -4 H${screenWidth}  v 4 h.01 v4`}
@@ -297,7 +298,6 @@ function pathReturn({
     return (
       <path
         strokeWidth="2"
-        // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
         filter="url(#distort)"
         d={`M0 ${
           startDateRow +
@@ -312,7 +312,6 @@ function pathReturn({
   return (
     <path
       strokeWidth="2"
-      // fill={`url(#grad${dogName.replace(' ', '')}_${currentLine})`}
       filter="url(#distort)"
       d={`M0 ${
         startDateRow +
@@ -362,12 +361,38 @@ function datePath({
   const numLines = new Array((endDateRow - startDateRow) / rowHeight + 1).fill(
     0
   );
-
+  const elem = document.getElementById('dogs');
+  const elemImgs = document.getElementsByClassName(
+    'dogImg'
+    // eslint-disable-next-line no-undef
+  ) as HTMLCollectionOf<HTMLElement>;
+  const dogGroup = document.getElementById(dogName);
+  const dogImg = document.getElementById(`${dogName}img`);
   return (
-    <g>
-      <g>
+    <g id={dogName} className="golden">
+      <g
+        onMouseOver={() => {
+          if (elem) elem.style.fill = '#E0E0E0';
+          // eslint-disable-next-line no-plusplus
+          for (let i = 0; i < elemImgs.length; i++) {
+            elemImgs[i].style.opacity = '0.2';
+          }
+          if (dogGroup) dogGroup.style.fill = 'url(#fullGrad)';
+          if (dogImg) dogImg.style.opacity = '1';
+        }}
+        onMouseLeave={() => {
+          if (elem) elem.style.fill = '';
+          // eslint-disable-next-line no-plusplus
+          for (let i = 0; i < elemImgs.length; i++) {
+            elemImgs[i].style.opacity = '1';
+          }
+          if (dogGroup) dogGroup.style.fill = '';
+        }}
+      >
         <Link to={`/${dogName.replace(' ', '')}`}>
           <image
+            className="dogImg"
+            id={`${dogName}img`}
             href={second}
             style={{ cursor: 'pointer' }}
             height="90"
@@ -376,22 +401,19 @@ function datePath({
           />
         </Link>
       </g>
-      {numLines.map(
-        (x, i) =>
-          // eslint-disable-next-line implicit-arrow-linebreak
-          pathReturn({
-            currentLine: i,
-            screenWidth,
-            startDateRow,
-            numLines,
-            startX,
-            endX,
-            rowHeight,
-            startOffset,
-            dogName,
-            num
-          })
-        // eslint-disable-next-line function-paren-newline
+      {numLines.map((x, i) =>
+        pathReturn({
+          currentLine: i,
+          screenWidth,
+          startDateRow,
+          numLines,
+          startX,
+          endX,
+          rowHeight,
+          startOffset,
+          dogName,
+          num
+        })
       )}
     </g>
   );
@@ -607,130 +629,124 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                 />
               </linearGradient>
             </defs>
-
-            {years.map(
-              (yr: string) =>
-                // eslint-disable-next-line implicit-arrow-linebreak
-                MonthDays2.map(
-                  (x: MonthDaysProp) =>
-                    // eslint-disable-next-line implicit-arrow-linebreak
-                    monthRect({
-                      startDateAsNum:
-                        DayPos({
-                          pixelPerDay,
-                          date: new Date(`${x.startDate}${yr}`)
-                        }) +
-                        (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
-                      endDateAsNum:
-                        DayPos({
-                          pixelPerDay,
-                          date: new Date(`${x.endDate}${yr}`)
-                        }) +
-                        (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
-                      screenWidth: width.width,
-                      rowHeight,
-                      startOffset,
-                      pixelPerDay,
-                      month: x.month,
-                      year: new Date(`${x.startDate}${yr}`).getFullYear()
-                    })
-                  // eslint-disable-next-line function-paren-newline
-                )
-              // eslint-disable-next-line function-paren-newline
-            )}
-            <g fill="url(#fullGrad)">
-              {records.map(
-                (x: RecordsProp, i: number) =>
-                  // eslint-disable-next-line implicit-arrow-linebreak
-                  datePath({
-                    startDateAsNum: DayPos({
-                      pixelPerDay,
-                      date: new Date(x.startDate)
-                    }),
-                    endDateAsNum: DayPos({
-                      pixelPerDay,
-                      date: new Date(x.endDate)
-                    }),
+            <g id="monthRects">
+              {years.map((yr: string) =>
+                MonthDays2.map((x: MonthDaysProp) =>
+                  monthRect({
+                    startDateAsNum:
+                      DayPos({
+                        pixelPerDay,
+                        date: new Date(`${x.startDate}${yr}`)
+                      }) +
+                      (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
+                    endDateAsNum:
+                      DayPos({
+                        pixelPerDay,
+                        date: new Date(`${x.endDate}${yr}`)
+                      }) +
+                      (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
                     screenWidth: width.width,
                     rowHeight,
                     startOffset,
-                    dogName: x.dogName,
-                    yearStart: new Date(x.startDate).getFullYear(),
-                    yearEnd: new Date(x.endDate).getFullYear(),
                     pixelPerDay,
-                    num: i
+                    month: x.month,
+                    year: new Date(`${x.startDate}${yr}`).getFullYear()
                   })
-
-                // eslint-disable-next-line function-paren-newline
+                )
               )}
             </g>
-            {years.map((yr: string) => (
-              <g key={yr} fill="url(#fullGrad)">
-                <rect
-                  x={returnXPos({
-                    dateAsNum:
-                      DayPos({
-                        pixelPerDay,
-                        date: new Date(`1/1/${yr}`)
-                      }) +
-                      (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                      0,
-                    screenWidth: width.width,
-                    year: parseInt(yr, 10)
-                  })}
-                  y={
-                    returnYPos({
-                      dateAsNum:
-                        DayPos({
-                          pixelPerDay,
-                          date: new Date(`1/1/${yr}`)
-                        }) +
-                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
-                      screenWidth: width.width,
-                      rowHeight
-                    }) +
-                    startOffset -
-                    rowHeight / 2
-                  }
-                  height={rowHeight}
-                  width={30 * pixelPerDay}
-                  fill="#f8f8f8"
-                  strokeWidth="2"
-                  stroke="#BDBDBD"
-                  strokeDasharray={`${30 * pixelPerDay} ${rowHeight}`}
-                />
-                <TitleSVGText
-                  x={returnXPos({
-                    dateAsNum:
-                      DayPos({
-                        pixelPerDay,
-                        date: new Date(`1/1/${yr}`)
-                      }) +
-                      (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                      70,
-                    screenWidth: width.width,
-                    year: parseInt(yr, 10)
-                  })}
-                  y={
-                    returnYPos({
+
+            <g fill="url(#fullGrad)" id="dogs">
+              {records.map((x: RecordsProp, i: number) =>
+                datePath({
+                  startDateAsNum: DayPos({
+                    pixelPerDay,
+                    date: new Date(x.startDate)
+                  }),
+                  endDateAsNum: DayPos({
+                    pixelPerDay,
+                    date: new Date(x.endDate)
+                  }),
+                  screenWidth: width.width,
+                  rowHeight,
+                  startOffset,
+                  dogName: x.dogName,
+                  yearStart: new Date(x.startDate).getFullYear(),
+                  yearEnd: new Date(x.endDate).getFullYear(),
+                  pixelPerDay,
+                  num: i
+                })
+              )}
+            </g>
+            <g id="years">
+              {years.map((yr: string) => (
+                <g key={yr} fill="url(#fullGrad)">
+                  <rect
+                    x={returnXPos({
                       dateAsNum:
                         DayPos({
                           pixelPerDay,
                           date: new Date(`1/1/${yr}`)
                         }) +
                         (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                        40,
+                        0,
                       screenWidth: width.width,
-                      rowHeight
-                    }) +
-                    startOffset +
-                    6
-                  }
-                >
-                  {yr}
-                </TitleSVGText>
-              </g>
-            ))}
+                      year: parseInt(yr, 10)
+                    })}
+                    y={
+                      returnYPos({
+                        dateAsNum:
+                          DayPos({
+                            pixelPerDay,
+                            date: new Date(`1/1/${yr}`)
+                          }) +
+                          (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                        screenWidth: width.width,
+                        rowHeight
+                      }) +
+                      startOffset -
+                      rowHeight / 2
+                    }
+                    height={rowHeight}
+                    width={30 * pixelPerDay}
+                    fill="#f8f8f8"
+                    strokeWidth="2"
+                    stroke="#BDBDBD"
+                    strokeDasharray={`${30 * pixelPerDay} ${rowHeight}`}
+                  />
+                  <TitleSVGText
+                    x={returnXPos({
+                      dateAsNum:
+                        DayPos({
+                          pixelPerDay,
+                          date: new Date(`1/1/${yr}`)
+                        }) +
+                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                        70,
+                      screenWidth: width.width,
+                      year: parseInt(yr, 10)
+                    })}
+                    y={
+                      returnYPos({
+                        dateAsNum:
+                          DayPos({
+                            pixelPerDay,
+                            date: new Date(`1/1/${yr}`)
+                          }) +
+                          (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                          40,
+                        screenWidth: width.width,
+                        rowHeight
+                      }) +
+                      startOffset +
+                      6
+                    }
+                  >
+                    {yr}
+                  </TitleSVGText>
+                </g>
+              ))}
+            </g>
           </ResizingSvg>
         ) : null}
         <div style={{ background: '#333333', height: '250px' }} />
