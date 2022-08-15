@@ -54,42 +54,6 @@ const MonthSVGText = styled.text`
   font-size: 16px;
 `;
 
-const BlurryGradientTop = styled.div`
-  position: absolute;
-  background-clip: content-box;
-  top: -200px;
-  left: 300px;
-  transform: translate(-50%, 0%);
-  width: 1200px;
-  height: 900px;
-  border-radius: 50% 22% 40% 80%;
-  filter: blur(100px);
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(235, 205, 203, 1),
-    rgba(243, 220, 146, 1),
-    rgba(249, 235, 71, 0)
-  );
-  opacity: 0;
-`;
-const BlurryGradientBottom = styled.div`
-  position: absolute;
-  background-clip: content-box;
-  bottom: -400px;
-  right: -600px;
-  transform: translate(-50%, 0%);
-  width: 600px;
-  height: 600px;
-  border-radius: 50% 22% 40% 80%;
-  filter: blur(100px);
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(235, 205, 203, 1),
-    rgba(243, 220, 146, 1),
-    rgba(249, 235, 71, 0)
-  );
-  opacity: 0;
-`;
 const years = [
   '2012',
   '2013',
@@ -576,8 +540,6 @@ function TestTwo({ isLoading, records }: HomePageProps) {
 
   return (
     <Background>
-      <BlurryGradientTop />
-      <BlurryGradientBottom />
       <Content ref={widthRef}>
         {!isLoading ? (
           <ResizingSvg

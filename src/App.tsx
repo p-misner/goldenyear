@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
-import HomePage from './components/testtwo';
+import HomePage from './components/Timeline';
 import DogPage from './components/DogPage';
 import './stylesheet/fonts.css';
 

@@ -30,11 +30,17 @@ const TooltipWrapper = styled.div`
   display: inline;
   vertical-align: middle;
   position: static;
+  @media (max-width: 900px) {
+    height: 80px;
+  }
 `;
 
 const TargetImage = styled.img`
   height: 96px;
   vertical-align: middle;
+  @media (max-width: 900px) {
+    height: 80px;
+  }
 `;
 // display of relative on Wrapper causing positioning issue with cursor
 const Arrow = styled.div`

@@ -27,7 +27,6 @@ const Background = styled.div`
 `;
 const Content = styled.div`
   background-color: white;
-
   width: 96vw;
   max-width: 1180px;
   overflow: scroll;
@@ -73,10 +72,17 @@ const Blocks = styled.div`
   overflow: hidden;
   z-index: 2;
   position: relative;
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 const DogImage = styled.img`
   margin-left: 24px;
   height: 160px;
+  @media (max-width: 900px) {
+    margin-left: 16px;
+    height: 120px;
+  }
 `;
 const VerticalBlocks = styled.div`
   display: flex;
@@ -90,35 +96,48 @@ const TitleItalics = styled.p`
   font-style: italic;
   font-weight: 400;
   font-size: 40px;
-  line-height: 50px;
+  line-height: 40px;
+  @media (max-width: 900px) {
+    font-size: 32px;
+    line-height: 16px;
+  }
 `;
 const TitleDogName = styled.p`
   font-weight: 600;
   font-size: 64px;
   line-height: 80px;
+  @media (max-width: 900px) {
+    font-size: 48px;
+  }
 `;
 const DescripPara = styled.p`
   font-size: 24px;
-  line-height: 32px;
+  line-height: 40px;
   margin: 0 44px;
+  @media (max-width: 900px) {
+    margin: 16px;
+  }
 `;
 const LeftBlock = styled.div`
   border: 1px solid black;
   border-left: 1px;
-  flex-grow: 1;
   padding: 4px;
   display: flex;
   align-items: center;
   display: flex;
   flex-direction: row;
   justify-content: start;
+  min-width: 440px;
   padding: 24px 0px;
+  @media (max-width: 900px) {
+    border-bottom: 0px;
+    border-right: 0px;
+  }
 `;
 const RightBlock = styled.div`
   border: 1px solid black;
   border-left: 0px;
   border-right: 0px;
-  flex-grow: 3;
   padding: 4px;
   display: flex;
   align-items: center;
@@ -136,7 +155,6 @@ const TimelineBlock = styled.button`
   border: 1px solid black;
   border-bottom: 0.5px;
   background: none;
-  // width: 210px;
   cursor: pointer;
 `;
 
@@ -156,6 +174,10 @@ const HeroText = styled.h3`
   font-size: 48px;
   line-height: 120px;
   font-weight: 400;
+  @media (max-width: 900px) {
+    font-size: 40px;
+    line-height: 90px;
+  }
 `;
 
 const ColumnContent = styled.div`
@@ -164,6 +186,9 @@ const ColumnContent = styled.div`
   margin: 48px;
   z-index: 2;
   position: relative;
+  @media (max-width: 900px) {
+    margin: 24px;
+  }
 `;
 
 const TextDiv = styled.div`
