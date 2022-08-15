@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -641,73 +642,153 @@ function TestTwo({ isLoading, records }: HomePageProps) {
               )}
             </g>
             <g id="years">
-              {years.map((yr: string) => (
-                <g key={yr} fill="url(#fullGrad)">
-                  <rect
-                    x={returnXPos({
-                      dateAsNum:
-                        DayPos({
-                          pixelPerDay,
-                          date: new Date(`1/1/${yr}`)
-                        }) +
-                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                        0,
-                      screenWidth: width.width,
-                      year: parseInt(yr, 10)
-                    })}
-                    y={
-                      returnYPos({
-                        dateAsNum:
-                          DayPos({
-                            pixelPerDay,
-                            date: new Date(`1/1/${yr}`)
-                          }) +
-                          (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
-                        screenWidth: width.width,
-                        rowHeight
+              {years.map((yr: string) => {
+                const monthRectOverflow =
+                  returnXPos({
+                    dateAsNum:
+                      DayPos({
+                        pixelPerDay,
+                        date: new Date(`1/1/${yr}`)
                       }) +
-                      startOffset -
-                      rowHeight / 2
-                    }
-                    height={rowHeight}
-                    width={30 * pixelPerDay}
-                    fill="#f8f8f8"
-                    strokeWidth="2"
-                    stroke="#BDBDBD"
-                    strokeDasharray={`${30 * pixelPerDay} ${rowHeight}`}
-                  />
-                  <TitleSVGText
-                    x={returnXPos({
-                      dateAsNum:
-                        DayPos({
-                          pixelPerDay,
-                          date: new Date(`1/1/${yr}`)
-                        }) +
-                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                        70,
-                      screenWidth: width.width,
-                      year: parseInt(yr, 10)
-                    })}
-                    y={
-                      returnYPos({
+                      (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                      0,
+                    screenWidth: width.width,
+                    year: parseInt(yr, 10)
+                  }) +
+                  30 * pixelPerDay;
+                return (
+                  <g key={yr} fill="url(#fullGrad)">
+                    <rect
+                      x={returnXPos({
                         dateAsNum:
                           DayPos({
                             pixelPerDay,
                             date: new Date(`1/1/${yr}`)
                           }) +
                           (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
-                          40,
+                          0,
                         screenWidth: width.width,
-                        rowHeight
-                      }) +
-                      startOffset +
-                      6
-                    }
-                  >
-                    {yr}
-                  </TitleSVGText>
-                </g>
-              ))}
+                        year: parseInt(yr, 10)
+                      })}
+                      y={
+                        returnYPos({
+                          dateAsNum:
+                            DayPos({
+                              pixelPerDay,
+                              date: new Date(`1/1/${yr}`)
+                            }) +
+                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                          screenWidth: width.width,
+                          rowHeight
+                        }) +
+                        startOffset -
+                        rowHeight / 2
+                      }
+                      height={rowHeight}
+                      width={30 * pixelPerDay}
+                      fill="#f8f8f8"
+                      strokeWidth="2"
+                      stroke="#BDBDBD"
+                      strokeDasharray={`${30 * pixelPerDay} ${rowHeight}`}
+                    />
+                    <rect
+                      x={0}
+                      y={
+                        returnYPos({
+                          dateAsNum:
+                            DayPos({
+                              pixelPerDay,
+                              date: new Date(`1/1/${yr}`)
+                            }) +
+                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                          screenWidth: width.width,
+                          rowHeight
+                        }) +
+                        rowHeight +
+                        startOffset -
+                        rowHeight / 2
+                      }
+                      height={rowHeight}
+                      width={
+                        monthRectOverflow % width.width > 29.9 * pixelPerDay
+                          ? 0
+                          : monthRectOverflow % width.width
+                      }
+                      fill="#f8f8f8"
+                      strokeWidth="2"
+                      stroke="#BDBDBD"
+                      strokeDasharray={`${
+                        monthRectOverflow % width.width
+                      } ${rowHeight}`}
+                    />
+                    {returnXPos({
+                      dateAsNum:
+                        DayPos({
+                          pixelPerDay,
+                          date: new Date(`1/1/${yr}`)
+                        }) +
+                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                      screenWidth: width.width,
+                      year: parseInt(yr, 10)
+                    })}
+                    <TitleSVGText
+                      x={
+                        returnXPos({
+                          dateAsNum:
+                            DayPos({
+                              pixelPerDay,
+                              date: new Date(`1/1/${yr}`)
+                            }) +
+                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                          screenWidth: width.width,
+                          year: parseInt(yr, 10)
+                        }) +
+                        pixelPerDay * 10
+                      }
+                      y={
+                        returnYPos({
+                          dateAsNum:
+                            DayPos({
+                              pixelPerDay,
+                              date: new Date(`1/1/${yr}`)
+                            }) +
+                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                            40,
+                          screenWidth: width.width,
+                          rowHeight
+                        }) +
+                        startOffset +
+                        9
+                      }
+                    >
+                      {yr}
+                    </TitleSVGText>
+                    {monthRectOverflow % width.width < 29.9 * pixelPerDay && (
+                      <TitleSVGText
+                        x={(monthRectOverflow % width.width) - pixelPerDay * 20}
+                        y={
+                          returnYPos({
+                            dateAsNum:
+                              DayPos({
+                                pixelPerDay,
+                                date: new Date(`1/1/${yr}`)
+                              }) +
+                              (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                              40,
+                            screenWidth: width.width,
+                            rowHeight
+                          }) +
+                          rowHeight +
+                          startOffset +
+                          9
+                        }
+                      >
+                        {yr}
+                      </TitleSVGText>
+                    )}
+                  </g>
+                );
+              })}
             </g>
           </ResizingSvg>
         ) : null}
