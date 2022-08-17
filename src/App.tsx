@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-wrap-multilines */
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
@@ -9,7 +10,7 @@ type RecordsProp = { dogName: string; startDate: string; endDate: string };
 
 function App() {
   const [isLoading, setLoading] = useState(true);
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState<any[]>([]);
 
   useEffect(() => {
     async function getRecords() {
@@ -26,9 +27,7 @@ function App() {
         recs.sort(
           // eslint-disable-next-line no-confusing-arrow
           (a: any, b: any) =>
-            // eslint-disable-next-line implicit-arrow-linebreak
             Date.parse(a.startDate) > Date.parse(b.startDate) ? 1 : -1
-          // eslint-disable-next-line function-paren-newline
         )
       );
       setLoading(false);
@@ -45,11 +44,18 @@ function App() {
             path="/"
             element={<HomePage isLoading={isLoading} records={records} />}
           />
-          {records.map((x: RecordsProp) => (
+          {records.map((x: RecordsProp, i: number) => (
             <Route
               key={x.dogName.replace(/\s/g, '')}
               path={`/${x.dogName.replace(/\s/g, '')}`}
-              element={<DogPage dogName={x.dogName} />}
+              element={
+                <DogPage
+                  dogName={x.dogName}
+                  nextDog={
+                    i < records.length - 1 ? records[i + 1].dogName : 'Timeline'
+                  }
+                />
+              }
             />
           ))}
         </Routes>

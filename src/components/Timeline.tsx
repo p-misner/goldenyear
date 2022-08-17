@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { scaleTime, scaleSequential, scaleLinear } from 'd3-scale';
+import { scaleTime } from 'd3-scale';
 
 import bgPic from '../data/bgColor.png';
-import second from '../data/dogSvgs/DogBackground.svg';
+import second from '../data/dogSvgs/dog_threequarters.svg';
+import bobo from '../data/dogSvgs/BoboSvg.svg';
+import boss from '../data/dogSvgs/BossSvg.svg';
 
 const Background = styled.div`
   padding: 0px;
@@ -358,7 +360,9 @@ function datePath({
           <image
             className="dogImg"
             id={`${dogName}img`}
-            href={second}
+            href={
+              dogName === 'Bobo' ? bobo : dogName === 'Boss' ? boss : second
+            }
             style={{ cursor: 'pointer' }}
             height="90"
             x={startX - 64}

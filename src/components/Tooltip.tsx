@@ -1,35 +1,13 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import React, { useState, createRef, useRef, useCallback } from 'react';
+import ReactTooltip from 'react-tooltip';
+
 import styled from 'styled-components';
 
-type TooltipContainerProps = {
-  xPos: number;
-  yPos: number;
-};
-
-const TooltipContainer = styled.div.attrs<TooltipContainerProps>((props) => ({
-  style: {
-    left: `${props.xPos - 0 || 500}px`,
-    top: `${props.yPos - 0 || 500}px`
-  }
-}))<TooltipContainerProps>`
-  background-color: white;
-  border: 2px solid black;
-  position: absolute;
-  font-family: Georgia, Times New Roman, serif;
-  padding: 4px 8px;
-  font-size: 16px;
-  line-height: 24px;
-  max-width: 300px;
-`;
-
 const TooltipWrapper = styled.div`
-  height: 96px;
-  width: 96px;
   margin: 0 12px;
-  display: inline;
+  display: inline-block;
   vertical-align: middle;
-  position: static;
   @media (max-width: 900px) {
     height: 80px;
   }
@@ -42,64 +20,85 @@ const TargetImage = styled.img`
     height: 80px;
   }
 `;
-// display of relative on Wrapper causing positioning issue with cursor
-const Arrow = styled.div`
-  position: absolute;
-  top: -20px;
-  right: 0px;
-  // display: none;
-  color: white;
-  line-height: 12px;
-  font-size: 20px;
-  font-weight: 800;
-  text-shadow: 2px black;
-`;
 
 // Tooltip Wrapper wraps TooltipTarget and TooltipCOntainer
 
 type TooltipProps = {
   text: string;
   imgString: string;
+  boundRect: string;
 };
 
-type PosProps = {
-  xPos: number;
-  yPos: number;
-};
+const TooltipTestWrapper = styled.div`
+  display: inline-block;
+  position: relative;
+`;
 
-function Tooltip({ text, imgString }: TooltipProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const showTooltip = isHovered || isFocused;
-  const [pos, setPos] = useState<PosProps>({ xPos: 5, yPos: 5 });
-  const cursor = useRef<HTMLImageElement>(null);
-  const updatePosition = useCallback((event: { pageX: any; pageY: any }) => {
-    setPos({ xPos: event.pageX, yPos: event.pageY });
-  }, []);
+const TooltipTestTip = styled.div`
+  position: absolute;
+  border: 1px solid black;
+  left: 50%;
+  top: 60%;
+  transform: translateX(5%) translateY(0%);
+  padding: 8px 12px;
+  color: black;
+  background: rgba(255, 255, 255, 1);
+  font-size: 14px;
+  line-height: 1.5;
+  z-index: 100;
+  width: 200px;
+`;
+
+function TooltipTest(props: {
+  delay: number;
+  children: any;
+  content: any;
+  direction: string;
+}) {
+  const { delay, children, direction, content } = props;
+  let timeout: any;
+  const [active, setActive] = useState(false);
+
+  const showTip = () => {
+    timeout = setTimeout(() => {
+      setActive(true);
+    }, delay || 400);
+  };
+
+  const hideTip = () => {
+    clearInterval(timeout);
+    setActive(false);
+  };
 
   return (
-    <TooltipWrapper>
-      <TargetImage
-        ref={cursor}
-        src={imgString}
-        alt="dog picture"
-        onMouseEnter={() => {
-          setIsHovered(true);
-          document.addEventListener('mousemove', updatePosition);
-        }}
-        onMouseLeave={() => {
-          document.removeEventListener('mousemove', updatePosition);
-          setIsHovered(false);
-        }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-      />
-
-      {showTooltip && (
-        <TooltipContainer xPos={pos.xPos} yPos={pos.yPos}>
-          {text}
-        </TooltipContainer>
+    <TooltipTestWrapper
+      // When to show the tooltip
+      onMouseEnter={showTip}
+      onMouseLeave={hideTip}
+    >
+      {/* Wrapping */}
+      {children}
+      {active && (
+        <TooltipTestTip className={`Tooltip-Tip ${direction || 'top'}`}>
+          {/* Content */}
+          {content}
+        </TooltipTestTip>
       )}
+    </TooltipTestWrapper>
+  );
+}
+
+function Tooltip({ text, imgString, boundRect }: TooltipProps) {
+  return (
+    <TooltipWrapper>
+      <TooltipTest content={text} direction="right" delay={100}>
+        <TargetImage
+          src={imgString}
+          alt="dog picture"
+          data-tip
+          data-for="registerTip"
+        />
+      </TooltipTest>
     </TooltipWrapper>
   );
 }
