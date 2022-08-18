@@ -8,6 +8,7 @@ const TooltipWrapper = styled.div`
   margin: 0 12px;
   display: inline-block;
   vertical-align: middle;
+  cursor: nesw-resize;
   @media (max-width: 900px) {
     height: 80px;
   }
@@ -26,7 +27,6 @@ const TargetImage = styled.img`
 type TooltipProps = {
   text: string;
   imgString: string;
-  boundRect: string;
 };
 
 const TooltipTestWrapper = styled.div`
@@ -47,6 +47,7 @@ const TooltipTestTip = styled.div`
   line-height: 1.5;
   z-index: 100;
   width: 200px;
+  filter: drop-shadow(6px 6px 12px rgba(255, 155, 123, 0.3));
 `;
 
 function TooltipTest(props: {
@@ -58,7 +59,6 @@ function TooltipTest(props: {
   const { delay, children, direction, content } = props;
   let timeout: any;
   const [active, setActive] = useState(false);
-
   const showTip = () => {
     timeout = setTimeout(() => {
       setActive(true);
@@ -88,9 +88,11 @@ function TooltipTest(props: {
   );
 }
 
-function Tooltip({ text, imgString, boundRect }: TooltipProps) {
+function Tooltip({ text, imgString }: TooltipProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <TooltipWrapper>
+    <TooltipWrapper onClick={() => setIsOpen(!isOpen)}>
       <TooltipTest content={text} direction="right" delay={100}>
         <TargetImage
           src={imgString}
@@ -99,6 +101,32 @@ function Tooltip({ text, imgString, boundRect }: TooltipProps) {
           data-for="registerTip"
         />
       </TooltipTest>
+      {isOpen ? (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            width: '100vw',
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            cursor: 'sw-resize',
+            zIndex: '300'
+          }}
+        >
+          <img
+            src={imgString}
+            alt="dog"
+            style={{
+              height: '90%',
+              width: 'auto'
+            }}
+          />
+        </div>
+      ) : null}
     </TooltipWrapper>
   );
 }

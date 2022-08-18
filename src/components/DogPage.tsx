@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Tooltip from './Tooltip';
@@ -212,10 +212,26 @@ const Flip = styled.span`
 
 function DogPage(props: DogProps) {
   const { dogName, nextDog } = props;
-  const offset = useRef<HTMLImageElement>(null);
-  const boundRect = offset?.current
-    ? offset?.current?.getBoundingClientRect()
-    : { left: 0, top: 0, width: 0 };
+  const [isLoading, setLoading] = useState(true);
+  const [records, setRecords] = useState<any[]>([]);
+  useEffect(() => {
+    async function getRecords() {
+      const response = await fetch(`http://localhost:3001/dogs/${dogName}`);
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      const recs = await response.json();
+      setRecords(recs);
+      setLoading(false);
+    }
+
+    getRecords();
+  }, []);
+
   return (
     <Background>
       <Content>
@@ -240,26 +256,23 @@ function DogPage(props: DogProps) {
           </RightBlock>
         </Blocks>
         <ColumnContent>
-          <TextDiv ref={offset}>
+          <TextDiv>
             <HeroText>
               Fond of eating dirt
               <Tooltip
                 text="random"
                 imgString="https://i.ibb.co/7gW1j9N/277809399-5426573314027553-5845920547943345123-n.jpg"
-                boundRect={`${dogName}a`}
               />
               and lying down,
               <Tooltip
                 text="this one is kind of really long like it should probably be two lines long"
                 imgString="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/golden-retriever-royalty-free-image-506756303-1560962726.jpg?crop=0.672xw:1.00xh;0.166xw,0&resize=640:*"
-                boundRect={`${dogName}b`}
               />
               Frank is the goodest of boys. He spends his days drooling on the
               ground,
               <Tooltip
                 text="random"
                 imgString="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/golden-retriever-royalty-free-image-506756303-1560962726.jpg?crop=0.672xw:1.00xh;0.166xw,0&resize=640:*"
-                boundRect={`${dogName}c`}
               />
               napping, resting his eyes, and invading the personal space of
               others.
@@ -273,41 +286,33 @@ function DogPage(props: DogProps) {
             </NavLink>
           </TimelineBlock>
         </Link>
-        <Blocks>
-          <BottomBlock>
-            {nextDog !== 'Timeline' && (
-              <svg
-                width="222"
-                height="133"
-                viewBox="0 0 222 133"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  filter: 'drop-shadow( 5px 8px 6px rgba(0, 0, 0, .15))'
-                }}
-              >
-                <path
-                  d="M1 133L5.12051 131.518C31.5921 118.754 32.5 51.0246 32.5 1C43.7 39 163.5 51.8333 222 53.5L5.12051 131.518C3.8106 132.149 2.43809 132.646 1 133Z"
-                  fill="white"
-                  stroke="#333333"
-                />
-                <Link to={`/${nextDog.replace(' ', '')}`}>
-                  <text
-                    fill="#000"
-                    x="45"
-                    y="73"
-                    fontSize="24"
-                    fontWeight="500"
-                  >
-                    {nextDog}⤵
-                  </text>
-                </Link>
-              </svg>
-            )}
-          </BottomBlock>
-        </Blocks>
+        <BottomBlock>
+          {nextDog !== 'Timeline' && (
+            <svg
+              width="222"
+              height="133"
+              viewBox="0 0 222 133"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{
+                position: 'absolute',
+                right: 0,
+                filter: 'drop-shadow( 5px 8px 6px rgba(0, 0, 0, .15))'
+              }}
+            >
+              <path
+                d="M1 133L5.12051 131.518C31.5921 118.754 32.5 51.0246 32.5 1C43.7 39 163.5 51.8333 222 53.5L5.12051 131.518C3.8106 132.149 2.43809 132.646 1 133Z"
+                fill="white"
+                stroke="#333333"
+              />
+              <Link to={`/${nextDog.replace(' ', '')}`}>
+                <text fill="#000" x="45" y="73" fontSize="24" fontWeight="500">
+                  {nextDog}⤵
+                </text>
+              </Link>
+            </svg>
+          )}
+        </BottomBlock>
       </Content>
       <SpiralContainer>
         <svg width="100%" height="37px">
