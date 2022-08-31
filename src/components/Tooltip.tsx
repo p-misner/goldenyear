@@ -1,6 +1,5 @@
 /* eslint-disable no-unsafe-optional-chaining */
-import React, { useState, createRef, useRef, useCallback } from 'react';
-import ReactTooltip from 'react-tooltip';
+import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -13,20 +12,19 @@ const TooltipWrapper = styled.div`
     height: 80px;
   }
 `;
-
-const TargetImage = styled.img`
-  height: 96px;
+type TargetImgProps = { type: string };
+const TargetImage = styled.img<TargetImgProps>`
+  height: ${(props) => (props.type === 'small' ? '112px' : '500px')};
   vertical-align: middle;
   @media (max-width: 900px) {
-    height: 80px;
+    height: ${(props) => (props.type === 'small' ? '80px' : '300px')};
   }
 `;
-
-// Tooltip Wrapper wraps TooltipTarget and TooltipCOntainer
 
 type TooltipProps = {
   text: string;
   imgString: string;
+  type: string;
 };
 
 const TooltipTestWrapper = styled.div`
@@ -46,7 +44,7 @@ const TooltipTestTip = styled.div`
   font-size: 14px;
   line-height: 1.5;
   z-index: 100;
-  width: 200px;
+  min-width: 200px;
   filter: drop-shadow(6px 6px 12px rgba(255, 155, 123, 0.3));
 `;
 
@@ -88,7 +86,7 @@ function TooltipTest(props: {
   );
 }
 
-function Tooltip({ text, imgString }: TooltipProps) {
+function Tooltip({ text, imgString, type }: TooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -99,6 +97,7 @@ function Tooltip({ text, imgString }: TooltipProps) {
           alt="dog picture"
           data-tip
           data-for="registerTip"
+          type={type}
         />
       </TooltipTest>
       {isOpen ? (

@@ -9,8 +9,6 @@ const recordRoutes = express.Router();
 const { ObjectId } = require('mongodb');
 const dbo = require('../db/conn');
 
-// This help convert the id from string to ObjectId for the _id.
-
 // This section will help you get a list of all the records.
 recordRoutes.route('/record').get((_req, res) => {
   const DBConnect = dbo.getDb('goldenyears');
@@ -21,6 +19,8 @@ recordRoutes.route('/record').get((_req, res) => {
       res.json(result);
     });
 });
+
+// all records from dogRecords
 recordRoutes.route('/dogRecords').get((req, res) => {
   const DBConnect = dbo.getDb('goldenyears');
   DBConnect.collection('dogDetails')
@@ -32,10 +32,11 @@ recordRoutes.route('/dogRecords').get((req, res) => {
 });
 
 // This section will help you get a single record by id
-recordRoutes.route('/dogs/:dogName').get((req, res) => {
+// should get from dogDetails database
+recordRoutes.route('/dogRecords/:dogName').get((req, res) => {
   const DBConnect = dbo.getDb();
   const secondquery = { dogName: req.params.dogName };
-  DBConnect.collection('dogs').findOne(secondquery, (err, result) => {
+  DBConnect.collection('dogDetails').findOne(secondquery, (err, result) => {
     if (err) throw err;
     res.json(result);
   });

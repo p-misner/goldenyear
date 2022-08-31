@@ -1,0 +1,295 @@
+{
+  "184": {
+    "ecdf_absolute": 0.689684466,
+    "Yield Model Drivers": {
+      "NDVI": 2.4074146411,
+      "Mean Rainfall": -0.3531109327,
+      "Static Features": 2.9154825425,
+      "Poor Crop Conditions": 0.2418680948,
+      " Mean Gro Drought Index": 0.7948056709,
+      "Very Poor Crop Conditions": 0.1669516579,
+      "Mean Land Surface Temperature": -2.9062853149,
+      "Good to Excellent Crop Conditions": -0.86688901
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 4.2561052266
+  },
+  "185": {
+    "ecdf_absolute": 0.6888956311,
+    "Yield Model Drivers": {
+      "NDVI": 1.3141270605,
+      "Mean Rainfall": -0.3666626451,
+      "Static Features": 3.1570289755,
+      "Poor Crop Conditions": 0.0626850268,
+      " Mean Gro Drought Index": 0.7076207062,
+      "Very Poor Crop Conditions": 0.1810722919,
+      "Mean Land Surface Temperature": -3.1214188899,
+      "Good to Excellent Crop Conditions": -0.9949088662
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 4.219163963
+  },
+  "186": {
+    "ecdf_absolute": 0.6944174757,
+    "Yield Model Drivers": {
+      "NDVI": 2.4757002251,
+      "Mean Rainfall": -0.2603476117,
+      "Static Features": 4.2831040049,
+      "Poor Crop Conditions": 0.1075613386,
+      " Mean Gro Drought Index": 0.6221598342,
+      "Very Poor Crop Conditions": 0.1748815425,
+      "Mean Land Surface Temperature": -3.1369584777,
+      "Good to Excellent Crop Conditions": -0.878403872
+    },
+    "conf_interval": 4.191607987
+  },
+  "187": {
+    "ecdf_absolute": 0.6994538835,
+    "Yield Model Drivers": {
+      "NDVI": 2.6921104407,
+      "Mean Rainfall": -0.3420513007,
+      "Static Features": 3.3366425688,
+      "Poor Crop Conditions": -0.0650464945,
+      " Mean Gro Drought Index": 0.4751583622,
+      "Very Poor Crop Conditions": -0.0370105746,
+      "Mean Land Surface Temperature": -3.2239044021,
+      "Good to Excellent Crop Conditions": -0.6105816888
+    },
+    "conf_interval": 4.1337868804
+  },
+  "188": {
+    "ecdf_absolute": 0.6995752427,
+    "Yield Model Drivers": {
+      "NDVI": 2.9160043801,
+      "Mean Rainfall": -0.6613541595,
+      "Static Features": 3.4149386953,
+      "Poor Crop Conditions": -0.0780206961,
+      " Mean Gro Drought Index": 0.6253229845,
+      "Very Poor Crop Conditions": -0.0805367277,
+      "Mean Land Surface Temperature": -3.90213394,
+      "Good to Excellent Crop Conditions": -0.6085936775
+    },
+    "conf_interval": 4.03806891
+  },
+  "189": {
+    "ecdf_absolute": 0.7041262136,
+    "Yield Model Drivers": {
+      "NDVI": 3.0548011512,
+      "Mean Rainfall": -1.1323146785,
+      "Static Features": 3.0397768881,
+      "Poor Crop Conditions": -0.172599919,
+      " Mean Gro Drought Index": 0.4905742918,
+      "Very Poor Crop Conditions": -0.1393420325,
+      "Mean Land Surface Temperature": -3.6597628657,
+      "Good to Excellent Crop Conditions": -0.5946282176
+    },
+    "conf_interval": 3.8063472455
+  },
+  "190": {
+    "ecdf_absolute": 0.7058252427,
+    "Yield Model Drivers": {
+      "NDVI": 2.8268010131,
+      "Mean Rainfall": -0.4571786519,
+      "Static Features": 3.2740076678,
+      "Poor Crop Conditions": -0.1886728822,
+      " Mean Gro Drought Index": 0.783620973,
+      "Very Poor Crop Conditions": -0.0710213066,
+      "Mean Land Surface Temperature": -3.7758330674,
+      "Good to Excellent Crop Conditions": -0.7025547118
+    },
+    "conf_interval": 3.9514482059
+  },
+  "191": {
+    "ecdf_absolute": 0.7071601942,
+    "Yield Model Drivers": {
+      "NDVI": 2.7335494744,
+      "Mean Rainfall": -0.7103948316,
+      "Static Features": 3.2087952975,
+      "Poor Crop Conditions": -0.0733306903,
+      " Mean Gro Drought Index": 0.5316691694,
+      "Very Poor Crop Conditions": -0.0277672109,
+      "Mean Land Surface Temperature": -3.7073563066,
+      "Good to Excellent Crop Conditions": -0.7118495122
+    },
+    "conf_interval": 3.9049225862
+  },
+  "192": {
+    "ecdf_absolute": 0.7131674757,
+    "Yield Model Drivers": {
+      "NDVI": 1.6963896173,
+      "Mean Rainfall": -0.7882196452,
+      "Static Features": 4.612101387,
+      "Poor Crop Conditions": -0.118775431,
+      " Mean Gro Drought Index": 0.5813724914,
+      "Very Poor Crop Conditions": 0.0514711262,
+      "Mean Land Surface Temperature": -3.7510735459,
+      "Good to Excellent Crop Conditions": -0.6636696905
+    },
+    "conf_interval": 3.5525495615
+  },
+  "193": {
+    "ecdf_absolute": 0.7185072816,
+    "Yield Model Drivers": {
+      "NDVI": 0.4347565078,
+      "Mean Rainfall": -0.8102595836,
+      "Static Features": 5.9478683288,
+      "Poor Crop Conditions": -0.0434561615,
+      " Mean Gro Drought Index": 0.3993360463,
+      "Very Poor Crop Conditions": 0.0971861303,
+      "Mean Land Surface Temperature": -4.6173175344,
+      "Good to Excellent Crop Conditions": -0.8013185412
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 3.1962702571
+  },
+  "194": {
+    "ecdf_absolute": 0.7219053398,
+    "Yield Model Drivers": {
+      "NDVI": 2.6741318034,
+      "Mean Rainfall": -0.3588447175,
+      "Static Features": 4.3799725677,
+      "Poor Crop Conditions": -0.084589945,
+      " Mean Gro Drought Index": 0.3302109237,
+      "Very Poor Crop Conditions": -0.0259792039,
+      "Mean Land Surface Temperature": -3.891939305,
+      "Good to Excellent Crop Conditions": -0.8994554021
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 3.1871700918
+  },
+  "195": {
+    "ecdf_absolute": 0.7346480583,
+    "Yield Model Drivers": {
+      "NDVI": 1.8966664946,
+      "Mean Rainfall": -0.5762404668,
+      "Static Features": 4.8336741003,
+      "Poor Crop Conditions": -0.0578829669,
+      " Mean Gro Drought Index": 0.2587588773,
+      "Very Poor Crop Conditions": -0.007291851,
+      "Mean Land Surface Temperature": -4.5433530036,
+      "Good to Excellent Crop Conditions": -1.0418583216
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.9456688066
+  },
+  "196": {
+    "ecdf_absolute": 0.728276699,
+    "Yield Model Drivers": {
+      "NDVI": 2.5281694183,
+      "Mean Rainfall": -0.6283210574,
+      "Static Features": 4.1645953927,
+      "Poor Crop Conditions": -0.0259156061,
+      " Mean Gro Drought Index": 0.2848339704,
+      "Very Poor Crop Conditions": -0.0112966083,
+      "Mean Land Surface Temperature": -3.8706754566,
+      "Good to Excellent Crop Conditions": -1.0727864693
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.9532582511
+  },
+  "197": {
+    "ecdf_absolute": 0.7336165049,
+    "Yield Model Drivers": {
+      "NDVI": 1.3167600209,
+      "Mean Rainfall": -1.0397792282,
+      "Static Features": 5.5718893692,
+      "Poor Crop Conditions": 0.0348343922,
+      " Mean Gro Drought Index": 0.2634755087,
+      "Very Poor Crop Conditions": -0.0480773747,
+      "Mean Land Surface Temperature": -4.339327422,
+      "Good to Excellent Crop Conditions": -1.058834496
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.6415441013
+  },
+  "198": {
+    "ecdf_absolute": 0.7337985437,
+    "Yield Model Drivers": {
+      "NDVI": 1.7953309875,
+      "Mean Rainfall": -1.0451406691,
+      "Static Features": 4.7568905363,
+      "Poor Crop Conditions": 0.1109529845,
+      " Mean Gro Drought Index": 0.2858236692,
+      "Very Poor Crop Conditions": -0.0277403656,
+      "Mean Land Surface Temperature": -4.1572401329,
+      "Good to Excellent Crop Conditions": -1.0820264582
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.5608161817
+  },
+  "199": {
+    "ecdf_absolute": 0.7400485437,
+    "Yield Model Drivers": {
+      "NDVI": 1.3008039315,
+      "Mean Rainfall": -0.772772125,
+      "Static Features": 5.175598925,
+      "Poor Crop Conditions": 0.0384679733,
+      " Mean Gro Drought Index": 0.1159293828,
+      "Very Poor Crop Conditions": 0.0630129355,
+      "Mean Land Surface Temperature": -3.8554362636,
+      "Good to Excellent Crop Conditions": -1.2038644556
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.5876071236
+  },
+  "200": {
+    "ecdf_absolute": 0.7366504854,
+    "Yield Model Drivers": {
+      "NDVI": 2.692042697,
+      "Mean Rainfall": -0.9851827422,
+      "Static Features": 4.5923889899,
+      "Poor Crop Conditions": 0.0234069023,
+      " Mean Gro Drought Index": 0.4764810776,
+      "Very Poor Crop Conditions": -0.0537854719,
+      "Mean Land Surface Temperature": -2.9994154276,
+      "Good to Excellent Crop Conditions": -0.9459672677
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.549797514
+  },
+  "201": {
+    "ecdf_absolute": 0.7455097087,
+    "Yield Model Drivers": {
+      "NDVI": 0.6321146909,
+      "Mean Rainfall": -0.6403248393,
+      "Static Features": 7.4673389109,
+      "Poor Crop Conditions": -0.0596558376,
+      " Mean Gro Drought Index": 0.3124105142,
+      "Very Poor Crop Conditions": 0.0399843835,
+      "Mean Land Surface Temperature": -1.0430893888,
+      "Good to Excellent Crop Conditions": -0.7127255487
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.1849109992
+  },
+  "202": {
+    "ecdf_absolute": 0.7401092233,
+    "Yield Model Drivers": {
+      "NDVI": 1.5578327648,
+      "Mean Rainfall": -0.9637494647,
+      "Static Features": 6.3619409906,
+      "Poor Crop Conditions": 0.0291088788,
+      " Mean Gro Drought Index": 0.1900900252,
+      "Very Poor Crop Conditions": -0.0383543978,
+      "Mean Land Surface Temperature": -0.9546047028,
+      "Good to Excellent Crop Conditions": -0.7646105816
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.5311015288
+  },
+  "203": {
+    "ecdf_absolute": 0.7391990291,
+    "Yield Model Drivers": {
+      "NDVI": 1.5212724714,
+      "Mean Rainfall": -0.5935188013,
+      "Static Features": 6.4207507148,
+      "Poor Crop Conditions": -0.0753773215,
+      " Mean Gro Drought Index": 0.2506889539,
+      "Very Poor Crop Conditions": -0.0008502351,
+      "Mean Land Surface Temperature": -0.2111830975,
+      "Good to Excellent Crop Conditions": -0.7060413577
+    },
+    "ground_truth_source_id": 25,
+    "conf_interval": 2.4525176621
+  }
+}

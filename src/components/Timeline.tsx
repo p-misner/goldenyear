@@ -7,8 +7,6 @@ import { scaleTime } from 'd3-scale';
 
 import bgPic from '../data/bgColor.png';
 import second from '../data/dogSvgs/dog_threequarters.svg';
-import bobo from '../data/dogSvgs/BoboSvg.svg';
-import boss from '../data/dogSvgs/BossSvg.svg';
 
 const Background = styled.div`
   padding: 0px;
@@ -57,11 +55,12 @@ const MonthSVGText = styled.text`
   font-size: 16px;
 `;
 
+const firstYear = 2016;
 const years = [
-  '2012',
-  '2013',
-  '2014',
-  '2015',
+  // '2012',
+  // '2013',
+  // '2014',
+  // '2015',
   '2016',
   '2017',
   '2018',
@@ -152,7 +151,12 @@ const MonthDays2: MonthDaysArray = [
     endDate: '12/31/'
   }
 ];
-type RecordsProp = { dogName: string; startDate: string; endDate: string };
+type RecordsProp = {
+  dogName: string;
+  startDate: string;
+  endDate: string;
+  imgSrc: string;
+};
 interface HomePageProps {
   isLoading: boolean;
   records: RecordsProp[];
@@ -194,6 +198,7 @@ type DatePathProps = {
   yearEnd: number;
   pixelPerDay: number;
   num: number;
+  imgSrc: string;
 };
 type MonthRectProps = {
   startDateAsNum: number;
@@ -212,7 +217,7 @@ const monthTextGray = '#E0E0E0';
 
 function DayPos({ pixelPerDay, date }: DayPosProps) {
   const oneDayScale = scaleTime()
-    .domain([new Date(2012, 0, 1), new Date(2012, 0, 2)]) // first dog Date, first Dog Date + 1 day
+    .domain([new Date(firstYear, 0, 1), new Date(firstYear, 0, 2)])
     .range([0, pixelPerDay]);
   return oneDayScale(date);
 }
@@ -302,25 +307,28 @@ function datePath({
   yearStart,
   yearEnd,
   pixelPerDay,
-  num
+  num,
+  imgSrc
 }: DatePathProps) {
   const startDateRow = returnYPos({
-    dateAsNum: startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
+    dateAsNum:
+      startDateAsNum + 30 * (yearStart - (firstYear - 1)) * pixelPerDay,
     screenWidth,
     rowHeight
   });
   const endDateRow = returnYPos({
-    dateAsNum: endDateAsNum + 30 * (yearEnd - 2011) * pixelPerDay,
+    dateAsNum: endDateAsNum + 30 * (yearEnd - (firstYear - 1)) * pixelPerDay,
     screenWidth,
     rowHeight
   });
   const startX = returnXPos({
-    dateAsNum: startDateAsNum + 30 * (yearStart - 2011) * pixelPerDay,
+    dateAsNum:
+      startDateAsNum + 30 * (yearStart - (firstYear - 1)) * pixelPerDay,
     screenWidth,
     year: yearStart
   });
   const endX = returnXPos({
-    dateAsNum: endDateAsNum + 30 * (yearEnd - 2011) * pixelPerDay,
+    dateAsNum: endDateAsNum + 30 * (yearEnd - (firstYear - 1)) * pixelPerDay,
     screenWidth,
     year: yearEnd
   });
@@ -360,9 +368,7 @@ function datePath({
           <image
             className="dogImg"
             id={`${dogName}img`}
-            href={
-              dogName === 'Bobo' ? bobo : dogName === 'Boss' ? boss : second
-            }
+            href={imgSrc}
             style={{ cursor: 'pointer' }}
             height="90"
             x={startX - 64}
@@ -605,13 +611,13 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                         pixelPerDay,
                         date: new Date(`${x.startDate}${yr}`)
                       }) +
-                      (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
+                      (parseInt(yr, 10) - (firstYear - 1)) * 30 * pixelPerDay,
                     endDateAsNum:
                       DayPos({
                         pixelPerDay,
                         date: new Date(`${x.endDate}${yr}`)
                       }) +
-                      (parseInt(yr, 10) - 2011) * 30 * pixelPerDay,
+                      (parseInt(yr, 10) - (firstYear - 1)) * 30 * pixelPerDay,
                     screenWidth: width.width,
                     rowHeight,
                     startOffset,
@@ -641,10 +647,14 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                   yearStart: new Date(x.startDate).getFullYear(),
                   yearEnd: new Date(x.endDate).getFullYear(),
                   pixelPerDay,
-                  num: i
+                  num: i,
+                  imgSrc: x.imgSrc || second
                 })
               )}
             </g>
+
+            {/* try to do this within the dogs svg group so stacking */}
+
             <g id="years">
               {years.map((yr: string) => {
                 const monthRectOverflow =
@@ -654,7 +664,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                         pixelPerDay,
                         date: new Date(`1/1/${yr}`)
                       }) +
-                      (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                      (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay +
                       0,
                     screenWidth: width.width,
                     year: parseInt(yr, 10)
@@ -669,7 +679,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                             pixelPerDay,
                             date: new Date(`1/1/${yr}`)
                           }) +
-                          (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                          (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay +
                           0,
                         screenWidth: width.width,
                         year: parseInt(yr, 10)
@@ -681,7 +691,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                               pixelPerDay,
                               date: new Date(`1/1/${yr}`)
                             }) +
-                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                            (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
                           screenWidth: width.width,
                           rowHeight
                         }) +
@@ -704,7 +714,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                               pixelPerDay,
                               date: new Date(`1/1/${yr}`)
                             }) +
-                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                            (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
                           screenWidth: width.width,
                           rowHeight
                         }) +
@@ -731,7 +741,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                           pixelPerDay,
                           date: new Date(`1/1/${yr}`)
                         }) +
-                        (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                        (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
                       screenWidth: width.width,
                       year: parseInt(yr, 10)
                     })}
@@ -743,7 +753,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                               pixelPerDay,
                               date: new Date(`1/1/${yr}`)
                             }) +
-                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay,
+                            (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
                           screenWidth: width.width,
                           year: parseInt(yr, 10)
                         }) +
@@ -756,7 +766,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                               pixelPerDay,
                               date: new Date(`1/1/${yr}`)
                             }) +
-                            (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                            (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay +
                             40,
                           screenWidth: width.width,
                           rowHeight
@@ -777,7 +787,9 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                                 pixelPerDay,
                                 date: new Date(`1/1/${yr}`)
                               }) +
-                              (parseInt(yr, 10) - 2012) * 30 * pixelPerDay +
+                              (parseInt(yr, 10) - firstYear) *
+                                30 *
+                                pixelPerDay +
                               40,
                             screenWidth: width.width,
                             rowHeight

@@ -54,6 +54,7 @@ function App() {
                   nextDog={
                     i < records.length - 1 ? records[i + 1].dogName : 'Timeline'
                   }
+                  timelineRecords={records}
                 />
               }
             />
