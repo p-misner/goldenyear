@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './components/Timeline';
 import DogPage from './components/DogPage';
-import './stylesheet/fonts.css';
+import './styles/fonts.css';
 
 type RecordsProp = { dogName: string; startDate: string; endDate: string };
 

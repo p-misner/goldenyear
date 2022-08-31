@@ -1,61 +1,19 @@
 /* eslint-disable indent */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { scaleTime } from 'd3-scale';
+import * as S from '../styles/TimelinePageStyles';
+import {
+  HomePageProps,
+  MonthDaysProp,
+  RecordsProp,
+  DayPos,
+  returnYPos,
+  returnXPos
+} from './utils';
+import { datePath, monthRect } from './TimelineComponents';
 
-import bgPic from '../data/bgColor.png';
 import second from '../data/dogSvgs/dog_threequarters.svg';
 
-const Background = styled.div`
-  padding: 0px;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background-image: url(${bgPic});
-  background-position: center top;
-  background-repeat: no-repeat;
-`;
-const SpiralContainer = styled.div`
-  max-width: 1180px;
-  margin: 0 auto;
-  position: absolute;
-  top: 20px;
-  width: 96vw;
-  height: 37px;
-  left: 0;
-  right: 0;
-  z-index: 4;
-`;
-const Content = styled.div`
-  background-color: white;
-  width: 96vw;
-  max-width: 1180px;
-  margin: 44px auto;
-  overflow: scroll;
-  height: 94vh;
-  max-height: 1000px;
-  border: 1px solid black;
-  position: relative;
-  z-index: 3;
-`;
-const ResizingSvg = styled.svg`
-  z-index: 1;
-  height: auto;
-  min-height: 500px;
-`;
-const TitleSVGText = styled.text`
-  font-family: 'Cormorant', serif;
-  font-size: 48px;
-  font-weight: 700;
-`;
-const MonthSVGText = styled.text`
-  font-family: 'Cormorant', serif;
-  font-size: 16px;
-`;
-
-const firstYear = 2016;
 const years = [
   // '2012',
   // '2013',
@@ -70,14 +28,8 @@ const years = [
   '2022'
 ];
 
-type MonthDaysProp = {
-  month: string;
-  days: number;
-  startDate: string;
-  endDate: string;
-};
-type MonthDaysArray = MonthDaysProp[];
-const MonthDays2: MonthDaysArray = [
+const firstYear = 2016;
+const MonthDays2: MonthDaysProp[] = [
   {
     month: 'Jan',
     days: 31,
@@ -151,386 +103,22 @@ const MonthDays2: MonthDaysArray = [
     endDate: '12/31/'
   }
 ];
-type RecordsProp = {
-  dogName: string;
-  startDate: string;
-  endDate: string;
-  imgSrc: string;
-};
-interface HomePageProps {
-  isLoading: boolean;
-  records: RecordsProp[];
-}
-type DayPosProps = {
-  pixelPerDay: number;
-  date: Date;
-};
-type XPosProps = {
-  dateAsNum: number;
-  screenWidth: number;
-  year: number;
-};
-type YPosProps = {
-  dateAsNum: number;
-  screenWidth: number;
-  rowHeight: number;
-};
-type PathReturnProps = {
-  currentLine: number;
-  screenWidth: number;
-  numLines: number[];
-  startX: number;
-  endX: number;
-  startDateRow: number;
-  rowHeight: number;
-  startOffset: number;
-  dogName: string;
-  num: number;
-};
-type DatePathProps = {
-  startDateAsNum: number;
-  endDateAsNum: number;
-  screenWidth: number;
-  rowHeight: number;
-  startOffset: number;
-  dogName: string;
-  yearStart: number;
-  yearEnd: number;
-  pixelPerDay: number;
-  num: number;
-  imgSrc: string;
-};
-type MonthRectProps = {
-  startDateAsNum: number;
-  endDateAsNum: number;
-  screenWidth: number;
-  rowHeight: number;
-  startOffset: number;
-  pixelPerDay: number;
-  month: string;
-  year: number;
-};
-
-const monthDashGray = '#e4e4e4';
-const lineBorderGray = '#E0E0E0';
-const monthTextGray = '#E0E0E0';
-
-function DayPos({ pixelPerDay, date }: DayPosProps) {
-  const oneDayScale = scaleTime()
-    .domain([new Date(firstYear, 0, 1), new Date(firstYear, 0, 2)])
-    .range([0, pixelPerDay]);
-  return oneDayScale(date);
-}
-function returnXPos({ dateAsNum, screenWidth, year }: XPosProps) {
-  return dateAsNum % screenWidth;
-}
-function returnYPos({ dateAsNum, screenWidth, rowHeight }: YPosProps) {
-  return Math.floor(dateAsNum / screenWidth) * rowHeight + rowHeight / 2;
-}
-
-function pathReturn({
-  currentLine,
-  screenWidth,
-  startDateRow,
-  numLines,
-  startX,
-  endX,
-  rowHeight,
-  startOffset,
-  dogName,
-  num
-}: PathReturnProps) {
-  const elem = document.getElementById('dogs');
-  const dogGroup = document.getElementById(dogName);
-
-  if (currentLine === 0) {
-    if (numLines.length === 1) {
-      return (
-        <path
-          strokeWidth="2"
-          filter="url(#distort)"
-          d={`M${startX} ${
-            startDateRow + startOffset + (num % 3) * 10 - 10
-          } v -4 H${endX}  v 4 h.01 v4`}
-        />
-      );
-    }
-
-    return (
-      <path
-        strokeWidth="2"
-        d={`M${startX} ${
-          startDateRow + startOffset + (num % 3) * 10 - 10
-        } v -4 H${screenWidth}  v 4 h.01 v4`}
-        filter="url(#distort)"
-      />
-    );
-  }
-  if (currentLine + 1 === numLines.length) {
-    return (
-      <path
-        strokeWidth="2"
-        filter="url(#distort)"
-        d={`M0 ${
-          startDateRow +
-          currentLine * rowHeight +
-          startOffset +
-          (num % 3) * 10 -
-          10
-        } v -4 H${endX}  v 4 h.01 v4`}
-      />
-    );
-  }
-  return (
-    <path
-      strokeWidth="2"
-      filter="url(#distort)"
-      d={`M0 ${
-        startDateRow +
-        currentLine * rowHeight +
-        startOffset +
-        (num % 3) * 10 -
-        10
-      } v -4 H${screenWidth}  v 4 h.01 v4`}
-    />
-  );
-}
 
 // startDateRow, endDateRow, startX, endX
-function datePath({
-  startDateAsNum,
-  endDateAsNum,
-  screenWidth,
-  rowHeight,
-  startOffset,
-  dogName,
-  yearStart,
-  yearEnd,
-  pixelPerDay,
-  num,
-  imgSrc
-}: DatePathProps) {
-  const startDateRow = returnYPos({
-    dateAsNum:
-      startDateAsNum + 30 * (yearStart - (firstYear - 1)) * pixelPerDay,
-    screenWidth,
-    rowHeight
-  });
-  const endDateRow = returnYPos({
-    dateAsNum: endDateAsNum + 30 * (yearEnd - (firstYear - 1)) * pixelPerDay,
-    screenWidth,
-    rowHeight
-  });
-  const startX = returnXPos({
-    dateAsNum:
-      startDateAsNum + 30 * (yearStart - (firstYear - 1)) * pixelPerDay,
-    screenWidth,
-    year: yearStart
-  });
-  const endX = returnXPos({
-    dateAsNum: endDateAsNum + 30 * (yearEnd - (firstYear - 1)) * pixelPerDay,
-    screenWidth,
-    year: yearEnd
-  });
 
-  const numLines = new Array((endDateRow - startDateRow) / rowHeight + 1).fill(
-    0
-  );
-  const elem = document.getElementById('dogs');
-  const elemImgs = document.getElementsByClassName(
-    'dogImg'
-    // eslint-disable-next-line no-undef
-  ) as HTMLCollectionOf<HTMLElement>;
-  const dogGroup = document.getElementById(dogName);
-  const dogImg = document.getElementById(`${dogName}img`);
-  return (
-    <g id={dogName} className="golden">
-      <g
-        onMouseOver={() => {
-          if (elem) elem.style.fill = '#E0E0E0';
-          // eslint-disable-next-line no-plusplus
-          for (let i = 0; i < elemImgs.length; i++) {
-            elemImgs[i].style.opacity = '0.2';
-          }
-          if (dogGroup) dogGroup.style.fill = 'url(#fullGrad)';
-          if (dogImg) dogImg.style.opacity = '1';
-        }}
-        onMouseLeave={() => {
-          if (elem) elem.style.fill = '';
-          // eslint-disable-next-line no-plusplus
-          for (let i = 0; i < elemImgs.length; i++) {
-            elemImgs[i].style.opacity = '1';
-          }
-          if (dogGroup) dogGroup.style.fill = '';
-        }}
-      >
-        <Link to={`/${dogName.replace(' ', '')}`}>
-          <image
-            className="dogImg"
-            id={`${dogName}img`}
-            href={imgSrc}
-            style={{ cursor: 'pointer' }}
-            height="90"
-            x={startX - 64}
-            y={startDateRow + startOffset - 54 + (num % 3) * 10 - 10}
-          />
-        </Link>
-      </g>
-      {numLines.map((x, i) =>
-        pathReturn({
-          currentLine: i,
-          screenWidth,
-          startDateRow,
-          numLines,
-          startX,
-          endX,
-          rowHeight,
-          startOffset,
-          dogName,
-          num
-        })
-      )}
-    </g>
-  );
-}
-
-function monthRect({
-  startDateAsNum,
-  endDateAsNum,
-  screenWidth,
-  rowHeight,
-  startOffset,
-  pixelPerDay,
-  month,
-  year
-}: MonthRectProps) {
-  const totalOffset = startOffset;
-  const startDateRow = returnYPos({
-    dateAsNum: startDateAsNum,
-    screenWidth,
-    rowHeight
-  });
-  const endDateRow = returnYPos({
-    dateAsNum: endDateAsNum,
-    screenWidth,
-    rowHeight
-  });
-  const startX = returnXPos({
-    dateAsNum: startDateAsNum,
-    screenWidth,
-    year
-  });
-  const endX = returnXPos({
-    dateAsNum: endDateAsNum,
-    screenWidth,
-    year
-  });
-  const numLines = new Array((endDateRow - startDateRow) / rowHeight + 1).fill(
-    0
-  );
-
-  if (numLines.length === 1) {
-    return (
-      <g>
-        <rect
-          x={startX}
-          y={startDateRow + totalOffset - rowHeight / 2}
-          height={rowHeight}
-          width={endX - startX + pixelPerDay}
-          style={{
-            stroke: monthDashGray,
-            strokeWidth: '1px',
-            strokeDasharray: '4 4',
-            fill: 'white'
-          }}
-        />
-        <MonthSVGText
-          x={startX + 5}
-          y={startDateRow + totalOffset - rowHeight / 2 + 15}
-          fill={monthTextGray}
-        >
-          {month}
-        </MonthSVGText>
-
-        {month === 'Dec' && (
-          <line
-            x1="0"
-            x2={screenWidth}
-            y1={endDateRow + totalOffset + rowHeight / 2}
-            y2={endDateRow + totalOffset + rowHeight / 2}
-            stroke={lineBorderGray}
-            strokeWidth="2"
-          />
-        )}
-      </g>
-    );
-  }
-  return (
-    <g>
-      <rect
-        x={startX}
-        y={startDateRow + totalOffset - rowHeight / 2}
-        height={rowHeight}
-        width={screenWidth - startX + pixelPerDay}
-        style={{
-          stroke: monthDashGray,
-          strokeWidth: '1px',
-          strokeDasharray: '4 4',
-          fill: 'white'
-        }}
-      />
-      <MonthSVGText
-        x={startX + 5}
-        y={startDateRow + totalOffset - rowHeight / 2 + 15}
-        fill={monthTextGray}
-      >
-        {month}
-      </MonthSVGText>
-      <rect
-        x={0}
-        y={endDateRow + totalOffset - rowHeight / 2}
-        height={rowHeight}
-        width={endX + pixelPerDay}
-        style={{
-          stroke: monthDashGray,
-          strokeWidth: '1px',
-          strokeDasharray: '4 4',
-          fill: 'white'
-        }}
-      />
-
-      {month === 'Dec' && (
-        <line
-          x1="0"
-          x2={screenWidth}
-          y1={endDateRow + totalOffset + rowHeight / 2}
-          y2={endDateRow + totalOffset + rowHeight / 2}
-          stroke={lineBorderGray}
-          strokeWidth="2"
-        />
-      )}
-      <line
-        x1="0"
-        x2={screenWidth}
-        y1={totalOffset}
-        y2={totalOffset}
-        stroke={lineBorderGray}
-        strokeWidth="2"
-      />
-    </g>
-  );
-}
-
-function TestTwo({ isLoading, records }: HomePageProps) {
+function Timeline({ isLoading, records }: HomePageProps) {
   const rowHeight = 60;
   const pixelPerDay = 8;
   const startOffset = 650;
   const [width, setWidth] = useState({ width: 1, numRows: 0 });
   const widthRef = useRef<any>();
+
   const totalTimeWidth = DayPos({
     pixelPerDay,
-    date: new Date(2022, 11, 31)
+    date: new Date(2022, 11, 31),
+    firstYear
   });
+
   const updateWidth = () => {
     const newWidth = widthRef.current.clientWidth;
     setWidth({
@@ -550,10 +138,10 @@ function TestTwo({ isLoading, records }: HomePageProps) {
   }, []);
 
   return (
-    <Background>
-      <Content ref={widthRef}>
+    <S.Background>
+      <S.Content ref={widthRef}>
         {!isLoading ? (
-          <ResizingSvg
+          <S.ResizingSvg
             width={width.width}
             height={width.numRows * rowHeight + startOffset + rowHeight / 2}
           >
@@ -609,21 +197,22 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                     startDateAsNum:
                       DayPos({
                         pixelPerDay,
-                        date: new Date(`${x.startDate}${yr}`)
+                        date: new Date(`${x.startDate}${yr}`),
+                        firstYear
                       }) +
                       (parseInt(yr, 10) - (firstYear - 1)) * 30 * pixelPerDay,
                     endDateAsNum:
                       DayPos({
                         pixelPerDay,
-                        date: new Date(`${x.endDate}${yr}`)
+                        date: new Date(`${x.endDate}${yr}`),
+                        firstYear
                       }) +
                       (parseInt(yr, 10) - (firstYear - 1)) * 30 * pixelPerDay,
                     screenWidth: width.width,
                     rowHeight,
                     startOffset,
                     pixelPerDay,
-                    month: x.month,
-                    year: new Date(`${x.startDate}${yr}`).getFullYear()
+                    month: x.month
                   })
                 )
               )}
@@ -634,11 +223,13 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                 datePath({
                   startDateAsNum: DayPos({
                     pixelPerDay,
-                    date: new Date(x.startDate)
+                    date: new Date(x.startDate),
+                    firstYear
                   }),
                   endDateAsNum: DayPos({
                     pixelPerDay,
-                    date: new Date(x.endDate)
+                    date: new Date(x.endDate),
+                    firstYear
                   }),
                   screenWidth: width.width,
                   rowHeight,
@@ -648,6 +239,7 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                   yearEnd: new Date(x.endDate).getFullYear(),
                   pixelPerDay,
                   num: i,
+                  firstYear,
                   imgSrc: x.imgSrc || second
                 })
               )}
@@ -662,12 +254,12 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                     dateAsNum:
                       DayPos({
                         pixelPerDay,
-                        date: new Date(`1/1/${yr}`)
+                        date: new Date(`1/1/${yr}`),
+                        firstYear
                       }) +
                       (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay +
                       0,
-                    screenWidth: width.width,
-                    year: parseInt(yr, 10)
+                    screenWidth: width.width
                   }) +
                   30 * pixelPerDay;
                 return (
@@ -677,19 +269,20 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                         dateAsNum:
                           DayPos({
                             pixelPerDay,
-                            date: new Date(`1/1/${yr}`)
+                            date: new Date(`1/1/${yr}`),
+                            firstYear
                           }) +
                           (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay +
                           0,
-                        screenWidth: width.width,
-                        year: parseInt(yr, 10)
+                        screenWidth: width.width
                       })}
                       y={
                         returnYPos({
                           dateAsNum:
                             DayPos({
                               pixelPerDay,
-                              date: new Date(`1/1/${yr}`)
+                              date: new Date(`1/1/${yr}`),
+                              firstYear
                             }) +
                             (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
                           screenWidth: width.width,
@@ -712,7 +305,8 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                           dateAsNum:
                             DayPos({
                               pixelPerDay,
-                              date: new Date(`1/1/${yr}`)
+                              date: new Date(`1/1/${yr}`),
+                              firstYear
                             }) +
                             (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
                           screenWidth: width.width,
@@ -739,23 +333,23 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                       dateAsNum:
                         DayPos({
                           pixelPerDay,
-                          date: new Date(`1/1/${yr}`)
+                          date: new Date(`1/1/${yr}`),
+                          firstYear
                         }) +
                         (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
-                      screenWidth: width.width,
-                      year: parseInt(yr, 10)
+                      screenWidth: width.width
                     })}
-                    <TitleSVGText
+                    <S.TitleSVGText
                       x={
                         returnXPos({
                           dateAsNum:
                             DayPos({
                               pixelPerDay,
-                              date: new Date(`1/1/${yr}`)
+                              date: new Date(`1/1/${yr}`),
+                              firstYear
                             }) +
                             (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay,
-                          screenWidth: width.width,
-                          year: parseInt(yr, 10)
+                          screenWidth: width.width
                         }) +
                         pixelPerDay * 10
                       }
@@ -764,7 +358,8 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                           dateAsNum:
                             DayPos({
                               pixelPerDay,
-                              date: new Date(`1/1/${yr}`)
+                              date: new Date(`1/1/${yr}`),
+                              firstYear
                             }) +
                             (parseInt(yr, 10) - firstYear) * 30 * pixelPerDay +
                             40,
@@ -776,16 +371,17 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                       }
                     >
                       {yr}
-                    </TitleSVGText>
+                    </S.TitleSVGText>
                     {monthRectOverflow % width.width < 29.9 * pixelPerDay && (
-                      <TitleSVGText
+                      <S.TitleSVGText
                         x={(monthRectOverflow % width.width) - pixelPerDay * 20}
                         y={
                           returnYPos({
                             dateAsNum:
                               DayPos({
                                 pixelPerDay,
-                                date: new Date(`1/1/${yr}`)
+                                date: new Date(`1/1/${yr}`),
+                                firstYear
                               }) +
                               (parseInt(yr, 10) - firstYear) *
                                 30 *
@@ -800,17 +396,17 @@ function TestTwo({ isLoading, records }: HomePageProps) {
                         }
                       >
                         {yr}
-                      </TitleSVGText>
+                      </S.TitleSVGText>
                     )}
                   </g>
                 );
               })}
             </g>
-          </ResizingSvg>
+          </S.ResizingSvg>
         ) : null}
         <div style={{ background: '#333333', height: '250px' }} />
-      </Content>
-      <SpiralContainer>
+      </S.Content>
+      <S.SpiralContainer>
         <svg width="100%" height="37px">
           <pattern
             id="pattern"
@@ -836,9 +432,9 @@ function TestTwo({ isLoading, records }: HomePageProps) {
           </pattern>
           <rect x="0" y="0" width="100%" height="37px" fill="url(#pattern)" />
         </svg>
-      </SpiralContainer>
-    </Background>
+      </S.SpiralContainer>
+    </S.Background>
   );
 }
 
-export default TestTwo;
+export default Timeline;

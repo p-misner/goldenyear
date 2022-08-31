@@ -1,7 +1,13 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import React, { useState } from 'react';
-
 import styled from 'styled-components';
+
+type TargetImgProps = { type: string };
+type TooltipProps = {
+  text: string;
+  imgString: string;
+  type: string;
+};
 
 const TooltipWrapper = styled.div`
   margin: 0 12px;
@@ -12,7 +18,6 @@ const TooltipWrapper = styled.div`
     height: 80px;
   }
 `;
-type TargetImgProps = { type: string };
 const TargetImage = styled.img<TargetImgProps>`
   height: ${(props) => (props.type === 'small' ? '112px' : '500px')};
   vertical-align: middle;
@@ -20,18 +25,10 @@ const TargetImage = styled.img<TargetImgProps>`
     height: ${(props) => (props.type === 'small' ? '80px' : '300px')};
   }
 `;
-
-type TooltipProps = {
-  text: string;
-  imgString: string;
-  type: string;
-};
-
 const TooltipTestWrapper = styled.div`
   display: inline-block;
   position: relative;
 `;
-
 const TooltipTestTip = styled.div`
   position: absolute;
   border: 1px solid black;
@@ -48,7 +45,7 @@ const TooltipTestTip = styled.div`
   filter: drop-shadow(6px 6px 12px rgba(255, 155, 123, 0.3));
 `;
 
-function TooltipTest(props: {
+function ActualTooltip(props: {
   delay: number;
   children: any;
   content: any;
@@ -91,7 +88,7 @@ function Tooltip({ text, imgString, type }: TooltipProps) {
 
   return (
     <TooltipWrapper onClick={() => setIsOpen(!isOpen)}>
-      <TooltipTest content={text} direction="right" delay={100}>
+      <ActualTooltip content={text} direction="right" delay={100}>
         <TargetImage
           src={imgString}
           alt="dog picture"
@@ -99,7 +96,7 @@ function Tooltip({ text, imgString, type }: TooltipProps) {
           data-for="registerTip"
           type={type}
         />
-      </TooltipTest>
+      </ActualTooltip>
       {isOpen ? (
         <div
           style={{
