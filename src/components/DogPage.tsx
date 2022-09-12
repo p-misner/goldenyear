@@ -115,7 +115,7 @@ function DogPage(props: DogProps) {
   useEffect(() => {
     async function getRecords() {
       const response = await fetch(
-        `https://goldenyearsapp.herokuapp.com:3001/dogRecords/${dogName}`
+        `http://localhost:3001/dogRecords/${dogName}`
       );
 
       if (!response.ok) {
