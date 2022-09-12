@@ -13,6 +13,7 @@ import {
 import { datePath, monthRect } from './TimelineComponents';
 
 import second from '../data/dogSvgs/dog_threequarters.svg';
+import coverPhoto from '../data/DogCoverPhoto.png';
 
 const years = [
   // '2012',
@@ -109,7 +110,7 @@ const MonthDays2: MonthDaysProp[] = [
 function Timeline({ isLoading, records }: HomePageProps) {
   const rowHeight = 60;
   const pixelPerDay = 8;
-  const startOffset = 650;
+  const startOffset = 48;
   const [width, setWidth] = useState({ width: 1, numRows: 0 });
   const widthRef = useRef<any>();
 
@@ -130,7 +131,7 @@ function Timeline({ isLoading, records }: HomePageProps) {
   // get width on initial render
   useEffect(() => {
     updateWidth();
-  }, []);
+  }, [isLoading]);
 
   // update width on window resize
   useEffect(() => {
@@ -140,6 +141,17 @@ function Timeline({ isLoading, records }: HomePageProps) {
   return (
     <S.Background>
       <S.Content ref={widthRef}>
+        <div
+          style={{
+            width: '100%',
+            height: '650px',
+            backgroundImage: `url(${coverPhoto})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top'
+          }}
+        >
+          {/* <img src={coverPhoto} alt="aefgr" /> */}
+        </div>
         {!isLoading ? (
           <S.ResizingSvg
             width={width.width}

@@ -2,9 +2,14 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable max-len */
 /* eslint-disable no-confusing-arrow */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback
+} from 'react';
 import { Link } from 'react-router-dom';
 import { scaleTime } from 'd3-scale';
 import Tooltip from './Tooltip';
@@ -80,8 +85,13 @@ function DogPage(props: DogProps) {
   };
 
   // get width on initial render
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateWidth();
+  }, [isLoading]);
+
+  // update width on window resize
+  useEffect(() => {
+    window.addEventListener('resize', updateWidth);
   }, []);
 
   const timelineRef = useCallback(
@@ -91,19 +101,16 @@ function DogPage(props: DogProps) {
       )[0].startDate;
       if (node !== null) {
         // eslint-disable-next-line no-param-reassign
-        node.scrollLeft = DayPos({
-          pixelPerDay,
-          date: new Date(currDogData)
-        });
+        node.scrollLeft =
+          DayPos({
+            pixelPerDay,
+            date: new Date(currDogData)
+          }) -
+          width.width / 2;
       }
     },
-    [dogName]
+    [width, dogName]
   );
-
-  // update width on window resize
-  useEffect(() => {
-    window.addEventListener('resize', updateWidth);
-  }, []);
 
   useEffect(() => {
     async function getRecords() {
@@ -146,9 +153,9 @@ function DogPage(props: DogProps) {
                 {records?.summaryText &&
                   records?.summaryText.map((x: any, i: number) =>
                     x.type === 'bold' ? (
-                      <S.Bolded key={i}>{x.text} </S.Bolded>
+                      <S.Bolded key={x.text}>{x.text} </S.Bolded>
                     ) : (
-                      <span key={i}>{x.text} </span>
+                      <span key={x.text}>{x.text} </span>
                     )
                   )}
               </S.DescripPara>
@@ -176,7 +183,10 @@ function DogPage(props: DogProps) {
               <S.PictureScroll>
                 {records?.gallery.map((x: any, i: number) => (
                   <Tooltip
-                    key={i}
+                    key={
+                      x.tooltipText +
+                      (Math.random() + 1).toString(36).substring(7)
+                    }
                     text={x.tooltipText}
                     imgString={x.imgSrc}
                     type="large"
@@ -188,7 +198,11 @@ function DogPage(props: DogProps) {
             <S.TextDiv>
               {records?.overflowText &&
                 records?.overflowText.map((x: any, i: number) => (
-                  <S.OverflowPara key={i}>{x}</S.OverflowPara>
+                  <S.OverflowPara
+                    key={(Math.random() + 1).toString(36).substring(7)}
+                  >
+                    {x}
+                  </S.OverflowPara>
                 ))}
             </S.TextDiv>
           </S.ColumnContent>

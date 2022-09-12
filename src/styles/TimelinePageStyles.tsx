@@ -37,6 +37,7 @@ export const ResizingSvg = styled.svg`
   z-index: 1;
   height: auto;
   min-height: 500px;
+  margin-top: -50px;
 `;
 export const TitleSVGText = styled.text`
   font-family: 'Cormorant', serif;
