@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     async function getRecords() {
       const response = await fetch(
-        'http://https://goldenyearsapp.herokuapp.com:3001/record/'
+        'http://goldenyearsapp.herokuapp.com:3001/record/'
       );
 
       if (!response.ok) {
