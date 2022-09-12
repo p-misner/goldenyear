@@ -14,7 +14,9 @@ function App() {
 
   useEffect(() => {
     async function getRecords() {
-      const response = await fetch('http://localhost:3001/record/');
+      const response = await fetch(
+        'http://https://goldenyearsapp.herokuapp.com:3001/record/'
+      );
 
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
