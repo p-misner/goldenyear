@@ -19,10 +19,10 @@ const TooltipWrapper = styled.div`
   }
 `;
 const TargetImage = styled.img<TargetImgProps>`
-  height: ${(props) => (props.type === 'small' ? '112px' : '500px')};
+  height: ${(props) => (props.type === 'small' ? '112px' : '400px')};
   vertical-align: middle;
   @media (max-width: 900px) {
-    height: ${(props) => (props.type === 'small' ? '80px' : '300px')};
+    height: ${(props) => (props.type === 'small' ? '80px' : '250px')};
   }
 `;
 const TooltipTestWrapper = styled.div`

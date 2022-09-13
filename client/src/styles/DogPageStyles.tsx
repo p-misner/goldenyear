@@ -20,7 +20,7 @@ export const Content = styled.div`
   margin: 44px auto;
   height: 94vh;
   max-height: 990px;
-  border: 1px solid black;
+  border: 1.5px solid #333333;
   position: relative;
 `;
 export const BlurryGradient = styled.div`
@@ -50,6 +50,20 @@ export const SpiralContainer = styled.div`
   height: 37px;
   left: 0;
   right: 0;
+`;
+export const PinContainer = styled.div`
+  max-width: 1090px;
+  margin: 0 auto;
+  position: absolute;
+  top: 60px;
+  width: 96vw;
+  height: 37px;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  // background-color: red;
+  display: flex;
+  justify-content: space-between;
 `;
 export const Blocks = styled.div`
   display: flex;
@@ -192,10 +206,10 @@ export const TextDiv = styled.div`
 export const PictureScroll = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
-  height: 500px;
+  height: 400px;
   white-space: nowrap;
   grid-column: 1 / span 6;
-  margin: 24px 0px;
+  margin: 0px 0px;
   @media (max-width: 900px) {
     height: 300px;
   }

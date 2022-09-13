@@ -14,6 +14,7 @@ import { datePath, monthRect } from './TimelineComponents';
 
 import second from '../data/dogSvgs/dog_threequarters.svg';
 import coverPhoto from '../data/DogCoverPhoto.png';
+import coverPhotoMobile from '../data/CoverPhotoMobile.png';
 
 const years = [
   // '2012',
@@ -144,14 +145,13 @@ function Timeline({ isLoading, records }: HomePageProps) {
         <div
           style={{
             width: '100%',
-            height: '650px',
+            height: width.width > 750 ? '600px' : '450px',
             backgroundImage: `url(${coverPhoto})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center top'
           }}
-        >
-          {/* <img src={coverPhoto} alt="aefgr" /> */}
-        </div>
+        />
+
         {!isLoading ? (
           <S.ResizingSvg
             width={width.width}
@@ -416,7 +416,40 @@ function Timeline({ isLoading, records }: HomePageProps) {
             </g>
           </S.ResizingSvg>
         ) : null}
-        <div style={{ background: '#333333', height: '250px' }} />
+        <S.Footer>
+          <S.ParaLeft>
+            Over the years, the Misner family has fostered many, many golden
+            retrievers through the rescue organization{' '}
+            <S.WebLink
+              href="https://www.https://trueloverescue.org"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              True Love Rescue
+            </S.WebLink>
+            . Each dog that passes through our home takes a bit of our heart
+            with them. I created this online calendar to record and celebrate
+            all the dogs that have filled our home with joy and fur on their
+            journey to their forever families.
+          </S.ParaLeft>
+          <S.ParaRight>
+            Built with d3.js, React, handdrawn images and love. Read more about
+            my process here.{' '}
+          </S.ParaRight>
+        </S.Footer>
+        <S.Copyright>
+          © 2022{' '}
+          <S.WebLink
+            href="https://www.priyamisner.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {' '}
+            Priya Misner
+          </S.WebLink>
+          . All Rights Reserved.{' '}
+        </S.Copyright>
       </S.Content>
       <S.SpiralContainer>
         <svg width="100%" height="37px">
@@ -445,6 +478,121 @@ function Timeline({ isLoading, records }: HomePageProps) {
           <rect x="0" y="0" width="100%" height="37px" fill="url(#pattern)" />
         </svg>
       </S.SpiralContainer>
+      <S.PinContainer>
+        <svg
+          id="pushpinleft"
+          width="50"
+          height="88"
+          viewBox="0 0 50 88"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g filter="url(#filter0_f_508_3999)">
+            <path
+              d="M28.9652 75.8841C21.2927 78.0167 14.7447 50.1157 12.4297 35.8987C18.8234 33.1219 32.2724 27.5684 34.918 27.5684C38.2251 27.5684 38.5559 73.2184 28.9652 75.8841Z"
+              fill="#BDBDBD"
+            />
+          </g>
+          <path
+            d="M39.4981 26.8238C39.4981 35.983 31.5792 43.461 21.7432 43.461C11.9072 43.461 3.98828 35.983 3.98828 26.8238C3.98828 17.6646 11.9072 10.1865 21.7432 10.1865C31.5792 10.1865 39.4981 17.6646 39.4981 26.8238Z"
+            fill="#333333"
+            stroke="#D9D9D9"
+          />
+          <path
+            d="M12.027 30.8245C13.4923 28.5904 11.4164 25.2391 10.1953 23.8428H15.6902C17.1555 23.8428 17.8272 26.3252 17.9798 27.5664C19.5062 29.273 23.2915 32.0347 26.2222 29.4282C29.8855 26.17 34.4646 24.7737 34.0066 26.17C33.5487 27.5664 27.5959 33.1518 27.5959 35.9445C27.5959 38.7372 23.0168 40.1335 16.6061 39.2026C10.1953 38.2717 10.1953 33.6172 12.027 30.8245Z"
+            fill="white"
+            fill-opacity="0.3"
+          />
+          <path
+            d="M30.5588 13.4118C30.5588 20.5058 24.3161 26.3235 16.5294 26.3235C8.74275 26.3235 2.5 20.5058 2.5 13.4118C2.5 6.31772 8.74275 0.5 16.5294 0.5C24.3161 0.5 30.5588 6.31772 30.5588 13.4118Z"
+            fill="#333333"
+            stroke="#D9D9D9"
+          />
+          <path
+            d="M5.91016 21.4219C7.52454 24.899 13.9572 30.2885 26.7729 24.0297C21.5572 25.7683 10.0827 27.6807 5.91016 21.4219Z"
+            fill="white"
+          />
+          <defs>
+            <filter
+              id="filter0_f_508_3999"
+              x="0.429688"
+              y="15.5684"
+              width="48.5898"
+              height="72.4316"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                result="shape"
+              />
+              <feGaussianBlur
+                stdDeviation="6"
+                result="effect1_foregroundBlur_508_3999"
+              />
+            </filter>
+          </defs>
+        </svg>
+        <svg
+          width="50"
+          height="88"
+          viewBox="0 0 50 88"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g filter="url(#filter0_f_508_4027)">
+            <path
+              d="M21.0348 75.8841C28.7073 78.0167 35.2553 50.1157 37.5703 35.8987C31.1766 33.1219 17.7276 27.5684 15.082 27.5684C11.7749 27.5684 11.4441 73.2184 21.0348 75.8841Z"
+              fill="#BDBDBD"
+            />
+          </g>
+          <path
+            d="M10.498 26.8238C10.498 35.983 18.4169 43.461 28.2529 43.461C38.0889 43.461 46.0078 35.983 46.0078 26.8238C46.0078 17.6646 38.0889 10.1865 28.2529 10.1865C18.4169 10.1865 10.498 17.6646 10.498 26.8238Z"
+            fill="#333333"
+            stroke="#D9D9D9"
+          />
+          <path
+            d="M37.973 30.8245C36.5077 28.5904 38.5836 25.2391 39.8047 23.8428H34.3098C32.8445 23.8428 32.1728 26.3252 32.0202 27.5664C30.4938 29.273 26.7085 32.0347 23.7778 29.4282C20.1145 26.17 15.5354 24.7737 15.9934 26.17C16.4513 27.5664 22.4041 33.1518 22.4041 35.9445C22.4041 38.7372 26.9832 40.1335 33.3939 39.2026C39.8047 38.2717 39.8047 33.6172 37.973 30.8245Z"
+            fill="white"
+            fill-opacity="0.3"
+          />
+          <path
+            d="M19.4412 13.4118C19.4412 20.5058 25.6839 26.3235 33.4706 26.3235C41.2573 26.3235 47.5 20.5058 47.5 13.4118C47.5 6.31772 41.2573 0.5 33.4706 0.5C25.6839 0.5 19.4412 6.31772 19.4412 13.4118Z"
+            fill="#333333"
+            stroke="#D9D9D9"
+          />
+          <path
+            d="M44.0898 21.4219C42.4755 24.899 36.0428 30.2885 23.2271 24.0297C28.4428 25.7683 39.9173 27.6807 44.0898 21.4219Z"
+            fill="white"
+          />
+          <defs>
+            <filter
+              id="filter0_f_508_4027"
+              x="0.980469"
+              y="15.5684"
+              width="48.5898"
+              height="72.4316"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                result="shape"
+              />
+              <feGaussianBlur
+                stdDeviation="6"
+                result="effect1_foregroundBlur_508_4027"
+              />
+            </filter>
+          </defs>
+        </svg>
+      </S.PinContainer>
     </S.Background>
   );
 }
