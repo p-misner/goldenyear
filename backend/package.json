@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd backend && npm run build",
-    "install-client": "cd backend && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build",
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
